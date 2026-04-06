@@ -30,16 +30,25 @@ function XTimelineEmbed({ height }: { height: number }) {
       }
     };
 
+    let injected: HTMLScriptElement | null = null;
+
     if (window.twttr) {
       load();
-    } else {
-      const script = document.createElement('script');
-      script.src = 'https://platform.twitter.com/widgets.js';
-      script.async = true;
-      script.charset = 'utf-8';
-      script.onload = load;
-      document.body.appendChild(script);
+    } else if (!document.querySelector('script[src*="widgets.js"]')) {
+      injected = document.createElement('script');
+      injected.src = 'https://platform.twitter.com/widgets.js';
+      injected.async = true;
+      injected.charset = 'utf-8';
+      injected.onload = load;
+      document.body.appendChild(injected);
     }
+
+    return () => {
+      if (injected) {
+        injected.onload = null;
+        document.body.removeChild(injected);
+      }
+    };
   }, []);
 
   return (
@@ -79,11 +88,11 @@ export default function SocialFeedSection({ compact = false }: Props) {
             </div>
             <div className={styles.widgetContainer} style={{ minHeight: height }}>
               <iframe
-                src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=500&height=${height}&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
+                src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&height=${height}&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
                 width="100%"
                 height={height}
                 style={{ border: 'none', overflow: 'hidden' }}
-                scrolling="no"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
                 allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                 title="NSIB Facebook Page"
               />
