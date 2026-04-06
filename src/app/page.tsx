@@ -55,6 +55,36 @@ function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-NG", { year: "numeric", month: "short", day: "numeric" });
 }
 
+const PARTNERS = [
+  { src: "/images/partners/nema.webp", alt: "National Emergency Management Agency" },
+  { src: "/images/partners/nigerian-navy.jpg", alt: "Nigerian Navy" },
+  { src: "/images/partners/imo.webp", alt: "International Maritime Organization" },
+  { src: "/images/partners/faan.webp", alt: "Federal Airports Authority of Nigeria" },
+  { src: "/images/partners/ncaa.webp", alt: "Nigerian Civil Aviation Authority" },
+  { src: "/images/partners/nama.webp", alt: "Nigerian Airspace Management Agency" },
+  { src: "/images/partners/nigerian-airforce.webp", alt: "Nigerian Air Force" },
+  { src: "/images/partners/federal_ministry_of_aviation.webp", alt: "Federal Ministry of Aviation" },
+];
+
+function PartnersSlideshow() {
+  return (
+    <section className={styles.partnersSection}>
+      <div className="container">
+        <h2 className={styles.partnersTitle}>Key Partners &amp; Collaborations</h2>
+      </div>
+      <div className={styles.partnersMarqueeWrapper}>
+        <div className={styles.partnersMarquee}>
+          {[...PARTNERS, ...PARTNERS].map((p, i) => (
+            <div className={styles.partnerLogo} key={i}>
+              <Image src={p.src} alt={p.alt} width={150} height={90} style={{ objectFit: "contain" }} unoptimized />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [dynamicReports, setDynamicReports] = useState<Report[]>([]);
   const [dynamicNews, setDynamicNews] = useState<NewsItem[]>([]);
@@ -369,7 +399,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. Action CTA */}
+      {/* 7. Key Partners & Collaborations */}
+      <PartnersSlideshow />
+
+      {/* 8. Action CTA */}
       <section className={styles.ctaSection}>
         <div className={styles.ctaBackgroundPattern}></div>
         <div className={`container ${styles.ctaContainer}`}>
