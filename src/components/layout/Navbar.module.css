@@ -214,6 +214,13 @@
   transform: translateY(-9px) rotate(-45deg);
 }
 
+/* ─── Logo scaling on small screens ─────────────────────────────────── */
+@media (max-width: 480px) {
+  .logoContainer img {
+    max-width: 150px;
+  }
+}
+
 @media (max-width: 1024px) {
   .navLinks {
     position: absolute;

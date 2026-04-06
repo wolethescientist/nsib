@@ -57,9 +57,9 @@ export default function HelpDeskPage() {
   return (
     <main className={styles.page}>
       {/* Antigravity Hero Section */}
-      <section style={{ 
-        backgroundColor: 'var(--nsib-navy)', 
-        color: 'white', 
+      <section className="page-hero" style={{
+        backgroundColor: 'var(--nsib-navy)',
+        color: 'white',
         padding: '10rem 0 8rem',
         position: 'relative',
         transformStyle: 'preserve-3d',

@@ -633,6 +633,25 @@
   }
 }
 
+@media (max-width: 480px) {
+  .header {
+    padding: 7rem 0 4rem;
+  }
+
+  .mandateCard {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .mandateQuote {
+    font-size: 1.15rem;
+    padding-left: 1.25rem;
+  }
+
+  .ctaInner {
+    padding: 2rem 1.25rem;
+  }
+}
+
 @media (max-width: 768px) {
   .headerInner {
     grid-template-columns: 1fr;

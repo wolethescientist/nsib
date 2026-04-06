@@ -88,9 +88,9 @@ export default function ServicesPage() {
     <main className={styles.page}>
 
       {/* Antigravity Hero Section */}
-      <section style={{ 
-        backgroundColor: 'var(--nsib-navy)', 
-        color: 'white', 
+      <section className="page-hero" style={{
+        backgroundColor: 'var(--nsib-navy)',
+        color: 'white',
         padding: '10rem 2rem 8rem',
         position: 'relative',
         transformStyle: 'preserve-3d',

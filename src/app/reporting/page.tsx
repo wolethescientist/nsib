@@ -51,9 +51,9 @@ export default function ReportingPage() {
     <main style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', paddingBottom: '8rem', overflowX: 'hidden', perspective: '1000px' }}>
       
       {/* Antigravity Hero Section */}
-      <section style={{ 
-        backgroundColor: 'var(--nsib-navy)', 
-        color: 'white', 
+      <section className="page-hero" style={{
+        backgroundColor: 'var(--nsib-navy)',
+        color: 'white',
         padding: '10rem 2rem 8rem',
         position: 'relative',
         transformStyle: 'preserve-3d'

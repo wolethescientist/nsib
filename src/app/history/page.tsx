@@ -56,9 +56,9 @@ export default function HistoryPage() {
   return (
     <main style={{ paddingBottom: "6rem", overflowX: 'hidden' }}>
       {/* Antigravity Hero Section */}
-      <section style={{ 
-        backgroundColor: 'var(--nsib-navy)', 
-        color: 'white', 
+      <section className="page-hero" style={{
+        backgroundColor: 'var(--nsib-navy)',
+        color: 'white',
         padding: '10rem 2rem 8rem',
         position: 'relative',
         transformStyle: 'preserve-3d',

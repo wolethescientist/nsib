@@ -43,9 +43,10 @@ export default function PublicationsPage() {
       {/* Antigravity Hero Section */}
       <section 
         ref={containerRef}
-        style={{ 
-          backgroundColor: 'var(--nsib-navy)', 
-          color: 'white', 
+        className="page-hero"
+        style={{
+          backgroundColor: 'var(--nsib-navy)',
+          color: 'white',
           padding: '12rem 2rem 10rem',
           position: 'relative',
           overflow: 'hidden',

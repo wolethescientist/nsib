@@ -693,7 +693,7 @@
 /* 6. News Section */
 .newsSection {
   padding: 8rem 0;
-  background-color: white;
+  background-color: var(--nsib-gray-50);
 }
 
 .newsGrid {
@@ -812,6 +812,7 @@
   .sectorsGrid { grid-template-columns: repeat(2, 1fr); }
   .cardsGrid { grid-template-columns: repeat(2, 1fr); }
   .dgGrid { grid-template-columns: 1fr; }
+  .newsSection { padding: 5rem 0; }
 }
 
 @media (max-width: 768px) {
@@ -820,29 +821,61 @@
   .heroSubtitle { font-size: 1.1rem; margin-bottom: 2rem; }
   .heroActions { flex-direction: column; width: 100%; gap: 1rem; }
   .heroActions a { width: 100%; text-align: center; }
-  
+
   .quickAccessSection { padding: 2rem 0; }
   .quickAccess { grid-template-columns: 1fr; }
   .accessItem { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 1.5rem; }
-  
+
   .mandateSection { padding: 4rem 0; }
   .mandateGrid { gap: 2rem; }
   .mandateText h2 { font-size: 2rem; }
-  
+
+  /* Keep stat overlay inside image on mobile */
+  .imageOverlay {
+    position: static;
+    margin-top: 1.5rem;
+    border-radius: var(--radius-md);
+    display: inline-block;
+  }
+
   .dgSection { padding: 4rem 0; }
   .dgGrid { gap: 2rem; }
   .dgContent h2 { font-size: 2rem; }
-  
+
+  /* Keep name plate below image on mobile instead of overflowing */
+  .dgImageWrapper {
+    margin-bottom: 0;
+  }
+  .dgNamePlate {
+    position: static;
+    margin-top: 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+  }
+
   .sectorsGrid, .cardsGrid { grid-template-columns: 1fr; }
   .sectorsSection { padding: 4rem 0; }
   .sectionHeaderCentered h2, .sectionHeader h2 { font-size: 2rem; }
-  
+
   .investigationsSection { padding: 4rem 0; }
-  
+
   .newsSection { padding: 4rem 0; }
-  
+
   .ctaSection { padding: 5rem 0; }
   .ctaContent h2 { font-size: 2.2rem; }
   .ctaButtons { flex-direction: column; width: 100%; }
   .ctaButtons a { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .heroTitle { font-size: 2rem; }
+  .heroSubtitle { font-size: 1rem; }
+  .mandateText h2, .dgContent h2 { font-size: 1.75rem; }
+  .dgQuote { font-size: 1.1rem; padding-left: 1.25rem; }
+  .ctaContent h2 { font-size: 1.8rem; }
+  .newsItem h4 a { font-size: 1.1rem; }
+  .newsText h2 { font-size: 1.75rem; }
+  .quickAccess { border-radius: var(--radius-md); }
+  .accessItem { padding: 1.25rem; gap: 1rem; }
+  .sectorCardBody h3 { font-size: 1.4rem; }
 }
