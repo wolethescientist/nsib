@@ -13,20 +13,20 @@ interface CalendarEvent {
   category: string;
   organizer_name?: string;
 }
-
+//fix
 const CAT_META: Record<string, { dot: string; badge: string; text: string; label: string }> = {
-  conference:   { dot: "#1B2A6B", badge: "rgba(27,42,107,0.12)",  text: "#1B2A6B", label: "Conference" },
-  workshop:     { dot: "#047857", badge: "rgba(16,185,129,0.12)", text: "#047857", label: "Workshop" },
-  training:     { dot: "#B45309", badge: "rgba(245,158,11,0.12)", text: "#B45309", label: "Training" },
-  seminar:      { dot: "#E23030", badge: "rgba(226,48,48,0.12)",  text: "#C41A1A", label: "Seminar" },
-  safety_drill: { dot: "#E23030", badge: "rgba(226,48,48,0.12)",  text: "#C41A1A", label: "Safety Drill" },
-  general:      { dot: "#475569", badge: "rgba(100,116,139,0.12)", text: "#475569", label: "General" },
+  conference: { dot: "#1B2A6B", badge: "rgba(27,42,107,0.12)", text: "#1B2A6B", label: "Conference" },
+  workshop: { dot: "#047857", badge: "rgba(16,185,129,0.12)", text: "#047857", label: "Workshop" },
+  training: { dot: "#B45309", badge: "rgba(245,158,11,0.12)", text: "#B45309", label: "Training" },
+  seminar: { dot: "#E23030", badge: "rgba(226,48,48,0.12)", text: "#C41A1A", label: "Seminar" },
+  safety_drill: { dot: "#E23030", badge: "rgba(226,48,48,0.12)", text: "#C41A1A", label: "Safety Drill" },
+  general: { dot: "#475569", badge: "rgba(100,116,139,0.12)", text: "#475569", label: "General" },
 };
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTH_NAMES = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December",
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
 ];
 
 function catMeta(category: string) {
@@ -227,7 +227,7 @@ export default function CalendarEventsSection({ events }: { events: CalendarEven
                 // Red takes priority (safety_drill / seminar), else navy
                 const hasRed = dayEvents.some(e => e.category === "safety_drill" || e.category === "seminar");
                 const tileColor = hasRed ? "#E23030" : "#1B2A6B";
-                const tileDark  = hasRed ? "#B91C1C" : "#0d1435";
+                const tileDark = hasRed ? "#B91C1C" : "#0d1435";
 
                 // Multiple event types → show tiny count badge
                 const multiType = new Set(dayEvents.map(e => catMeta(e.category).dot)).size > 1;
