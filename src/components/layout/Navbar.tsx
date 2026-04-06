@@ -44,10 +44,10 @@ export default function Navbar() {
         <div className={styles.logoContainer}>
           <Link href="/">
             <Image
-              src="/images/nsib-logo.png"
+              src="/nsib-logo-nobg-white-text.webp"
               alt="NSIB Logo"
-              width={200}
-              height={60}
+              width={220}
+              height={65}
               priority
               style={{ objectFit: 'contain' }}
             />
@@ -110,6 +110,10 @@ export default function Navbar() {
               <Link href="/investigation-manuals" className={styles.dropdownLink}>Investigation Manuals</Link>
               <Link href="/foi" className={styles.dropdownLink}>FOI</Link>
             </div>
+          </div>
+
+          <div className={styles.navItem}>
+            <Link href="/event">Events</Link>
           </div>
 
           <div className={styles.navItem}>

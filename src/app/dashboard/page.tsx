@@ -83,12 +83,13 @@ export default function DashboardPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const newsImageInputRef = useRef<HTMLInputElement>(null);
+  const eventFlyerInputRef = useRef<HTMLInputElement>(null);
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState<Report[]>([]);
   const [reportsLoading, setReportsLoading] = useState(false);
-  const [activeSection, setActiveSection] = useState<"overview" | "upload" | "reports" | "news" | "manage-news">("overview");
+  const [activeSection, setActiveSection] = useState<"overview" | "upload" | "reports" | "news" | "manage-news" | "events">("overview");
 
   // News state
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -106,6 +107,78 @@ export default function DashboardPage() {
   const [newsSubmitting, setNewsSubmitting] = useState(false);
   const [newsError, setNewsError] = useState("");
   const [newsSuccess, setNewsSuccess] = useState("");
+
+  // Events state
+  const [eventTitle, setEventTitle] = useState("");
+  const [eventDescription, setEventDescription] = useState("");
+  const [eventDate, setEventDate] = useState("");
+  const [eventEndDate, setEventEndDate] = useState("");
+  const [eventLocation, setEventLocation] = useState("");
+  const [eventCategory, setEventCategory] = useState("general");
+  const [eventRegistrationLink, setEventRegistrationLink] = useState("");
+  const [eventFlyerFile, setEventFlyerFile] = useState<File | null>(null);
+  const [eventFlyerPreview, setEventFlyerPreview] = useState("");
+  const [eventFlyerUploading, setEventFlyerUploading] = useState(false);
+  const [eventSubmitting, setEventSubmitting] = useState(false);
+  const [eventError, setEventError] = useState("");
+  const [eventSuccess, setEventSuccess] = useState("");
+
+  const handleEventFlyerSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setEventFlyerFile(file);
+    setEventFlyerPreview(URL.createObjectURL(file));
+  };
+
+  const handleEventSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!eventTitle || !eventDate) {
+      setEventError("Title and event date are required.");
+      return;
+    }
+    setEventSubmitting(true);
+    setEventError("");
+    setEventSuccess("");
+    try {
+      let flyerUrl: string | undefined;
+      if (eventFlyerFile) {
+        setEventFlyerUploading(true);
+        const fd = new FormData();
+        fd.append("file", eventFlyerFile);
+        const imgRes = await fetch("/api/events/upload-image", { method: "POST", body: fd });
+        const imgData = await imgRes.json();
+        setEventFlyerUploading(false);
+        if (!imgRes.ok) throw new Error(imgData.error || "Flyer upload failed");
+        flyerUrl = imgData.url;
+      }
+
+      const res = await fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: eventTitle,
+          description: eventDescription,
+          event_date: new Date(eventDate).toISOString(),
+          end_date: eventEndDate ? new Date(eventEndDate).toISOString() : undefined,
+          location: eventLocation,
+          category: eventCategory,
+          image_url: flyerUrl,
+          registration_link: eventRegistrationLink || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to create event");
+      setEventSuccess("Event published successfully!");
+      setEventTitle(""); setEventDescription(""); setEventDate(""); setEventEndDate("");
+      setEventLocation(""); setEventCategory("general"); setEventRegistrationLink("");
+      setEventFlyerFile(null); setEventFlyerPreview("");
+      if (eventFlyerInputRef.current) eventFlyerInputRef.current.value = "";
+    } catch (err) {
+      setEventError(err instanceof Error ? err.message : "Submission failed");
+    }
+    setEventSubmitting(false);
+    setTimeout(() => setEventSuccess(""), 3000);
+  };
 
   // Upload form state
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -414,6 +487,15 @@ export default function DashboardPage() {
               <path d="M17.586 3.586a2 2 0 1 1 2.828 2.828L12 15l-4 1 1-4 8.586-8.414z" />
             </svg>
             Manage News
+          </button>
+          <button
+            className={`${styles.navItem} ${activeSection === "events" ? styles.navItemActive : ""}`}
+            onClick={() => setActiveSection("events")}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Create Event
           </button>
         </nav>
 
@@ -929,6 +1011,156 @@ export default function DashboardPage() {
                 ))}
               </div>
             )}
+          </div>
+        )}
+        {/* Events Section */}
+        {activeSection === "events" && (
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <h1 className={styles.pageTitle}>Create Event</h1>
+              <p className={styles.pageDesc}>Publish upcoming events to the public events page.</p>
+            </div>
+
+            {eventSuccess && (
+              <div className={styles.successBanner}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                {eventSuccess}
+              </div>
+            )}
+            {eventError && (
+              <div className={styles.errorBanner}>{eventError}</div>
+            )}
+
+            <form onSubmit={handleEventSubmit} className={styles.newsForm}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Event Title *</label>
+                <input
+                  type="text"
+                  className={styles.input}
+                  value={eventTitle}
+                  onChange={e => setEventTitle(e.target.value)}
+                  placeholder="e.g. Annual Transport Safety Summit 2025"
+                  required
+                />
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Start Date & Time *</label>
+                  <input
+                    type="datetime-local"
+                    className={styles.input}
+                    value={eventDate}
+                    onChange={e => setEventDate(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>End Date & Time (optional)</label>
+                  <input
+                    type="datetime-local"
+                    className={styles.input}
+                    value={eventEndDate}
+                    onChange={e => setEventEndDate(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Location</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={eventLocation}
+                    onChange={e => setEventLocation(e.target.value)}
+                    placeholder="e.g. NSIB Headquarters, Abuja"
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Category</label>
+                  <select
+                    className={styles.select}
+                    value={eventCategory}
+                    onChange={e => setEventCategory(e.target.value)}
+                  >
+                    {[["general","General"],["conference","Conference"],["workshop","Workshop"],["seminar","Seminar"],["training","Training"],["safety_drill","Safety Drill"]].map(([v,l]) => (
+                      <option key={v} value={v}>{l}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Description</label>
+                <textarea
+                  className={styles.textarea}
+                  value={eventDescription}
+                  onChange={e => setEventDescription(e.target.value)}
+                  rows={4}
+                  placeholder="Describe the event, agenda, audience, and objectives..."
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Event Flyer <span style={{ fontWeight: 400, textTransform: "none", color: "#999" }}>(optional)</span></label>
+                <div
+                  className={styles.dropZone}
+                  style={{ minHeight: "110px", padding: "1rem", cursor: "pointer" }}
+                  onClick={() => eventFlyerInputRef.current?.click()}
+                >
+                  <input
+                    ref={eventFlyerInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    className={styles.fileInput}
+                    onChange={handleEventFlyerSelect}
+                  />
+                  {eventFlyerPreview ? (
+                    <div className={styles.fileSelected}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={eventFlyerPreview} alt="flyer preview" style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "8px" }} />
+                      <button
+                        type="button"
+                        className={styles.fileRemove}
+                        onClick={e => { e.stopPropagation(); setEventFlyerFile(null); setEventFlyerPreview(""); if (eventFlyerInputRef.current) eventFlyerInputRef.current.value = ""; }}
+                      >
+                        Change image
+                      </button>
+                    </div>
+                  ) : (
+                    <div className={styles.dropZoneContent}>
+                      <div className={styles.dropIcon}>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                      </div>
+                      <p className={styles.dropTitle}>Upload event flyer</p>
+                      <p className={styles.dropSub}>Click to browse</p>
+                      <p className={styles.dropFormats}>JPEG, PNG, WebP · max 10 MB</p>
+                    </div>
+                  )}
+                </div>
+                {eventFlyerUploading && (
+                  <p style={{ fontSize: "0.82rem", color: "var(--nsib-slate-light)", marginTop: "0.4rem" }}>Uploading flyer…</p>
+                )}
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Registration Link (optional)</label>
+                <input
+                  type="url"
+                  className={styles.input}
+                  value={eventRegistrationLink}
+                  onChange={e => setEventRegistrationLink(e.target.value)}
+                  placeholder="https://..."
+                />
+              </div>
+
+              <button type="submit" className={styles.submitBtn} disabled={eventSubmitting || eventFlyerUploading}>
+                {eventSubmitting ? (eventFlyerUploading ? "Uploading flyer…" : "Publishing…") : "Publish Event"}
+              </button>
+            </form>
           </div>
         )}
       </main>

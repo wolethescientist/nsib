@@ -89,9 +89,9 @@ export default function NewsDetailPage() {
             </span>
             <span style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.6)" }}>{formatDate(item.published_at)}</span>
           </div>
-          <h1 style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", fontWeight: 800, lineHeight: 1.2, marginBottom: "1rem" }}>{item.title}</h1>
-          <p style={{ fontSize: "1.05rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.7 }}>{item.excerpt}</p>
-          <p style={{ marginTop: "1.5rem", fontSize: "0.82rem", color: "rgba(255,255,255,0.5)" }}>By {item.author_name}</p>
+          <h1 style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)", fontWeight: 800, lineHeight: 1.15, marginBottom: "1.25rem" }}>{item.title}</h1>
+          <p style={{ fontSize: "1.25rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.75 }}>{item.excerpt}</p>
+          <p style={{ marginTop: "1.75rem", fontSize: "0.9rem", color: "rgba(255,255,255,0.5)" }}>By {item.author_name}</p>
         </div>
       </section>
 
@@ -109,13 +109,17 @@ export default function NewsDetailPage() {
 
       {/* Article body */}
       <div className="container" style={{ maxWidth: "860px", marginTop: item.image_url ? "3rem" : "1rem" }}>
-        <div style={{ background: "white", borderRadius: "20px", padding: "clamp(2rem, 5vw, 4rem)", boxShadow: "0 4px 24px rgba(0,0,0,0.06)", lineHeight: 1.8, color: "#333", fontSize: "1.05rem" }}>
+        <div style={{ background: "white", borderRadius: "20px", padding: "clamp(2.5rem, 5vw, 5rem)", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
           {item.content ? (
             item.content.split("\n").map((para, i) =>
-              para.trim() ? <p key={i} style={{ marginBottom: "1.25rem" }}>{para}</p> : null
+              para.trim() ? (
+                <p key={i} style={{ fontSize: "1.2rem", lineHeight: 1.85, color: "#2d3748", marginBottom: "1.75rem", fontWeight: 400 }}>
+                  {para}
+                </p>
+              ) : null
             )
           ) : (
-            <p style={{ color: "#888", fontStyle: "italic" }}>Full article content not available.</p>
+            <p style={{ fontSize: "1.2rem", color: "#888", fontStyle: "italic" }}>Full article content not available.</p>
           )}
         </div>
 

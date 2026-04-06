@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, ReactNode } from "react";
-import { usePathname } from "next/navigation";
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -9,7 +8,7 @@ interface ScrollRevealProps {
   direction?: "up" | "down" | "left" | "right";
   className?: string;
   duration?: number;
-  distance?: number;
+  distance?: number; // kept for API compat, controlled via CSS now
 }
 
 export default function ScrollReveal({
@@ -18,49 +17,34 @@ export default function ScrollReveal({
   direction = "up",
   className = "",
   duration = 0.7,
-  distance = 40,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
 
-  const getTransform = () => {
-    switch (direction) {
-      case "up":    return `translate3d(0, ${distance}px, 0)`;
-      case "down":  return `translate3d(0, -${distance}px, 0)`;
-      case "left":  return `translate3d(${distance}px, 0, 0)`;
-      case "right": return `translate3d(-${distance}px, 0, 0)`;
-    }
-  };
-
-  // Reset + re-animate whenever the pathname changes (including back-nav)
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    // Reset: clear any previous animation state
-    delete el.dataset.revealed;
-    el.style.transition = "none";
-    el.style.opacity = "0";
-    el.style.transform = getTransform();
-    // Force reflow so hidden state paints before transition kicks in
-    void el.offsetHeight;
+    // Already revealed on a previous render — stay visible instantly.
+    if (el.classList.contains("sr-revealed")) return;
 
     const reveal = () => {
-      if (el.dataset.revealed === "true") return;
-      el.dataset.revealed = "true";
-      el.style.transition = `opacity ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`;
-      el.style.opacity = "1";
-      el.style.transform = "translate3d(0, 0, 0)";
+      if (el.classList.contains("sr-revealed")) return;
+      // Apply transition first, then add the class that drives it.
+      el.style.transition = `opacity ${duration}s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform ${duration}s cubic-bezier(0.16,1,0.3,1) ${delay}s`;
+      el.classList.add("sr-revealed");
     };
 
-    // Elements currently in viewport → animate immediately
     const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      requestAnimationFrame(() => reveal());
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+
+    if (inView) {
+      // Element is visible on load — reveal after two rAFs so the CSS
+      // hidden state has already painted and the transition plays cleanly.
+      requestAnimationFrame(() => requestAnimationFrame(reveal));
       return;
     }
 
-    // Elements below → observe for scroll
+    // Below the fold — use IntersectionObserver.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -73,12 +57,13 @@ export default function ScrollReveal({
 
     observer.observe(el);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  // Run once on mount only — no pathname dependency needed because the
+  // CSS attribute already sets the hidden state server-side.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // No inline opacity:0 — if useEffect doesn't fire, content stays visible
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} data-sr={direction} className={className}>
       {children}
     </div>
   );

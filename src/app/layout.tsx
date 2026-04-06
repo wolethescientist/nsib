@@ -13,8 +13,7 @@ export const metadata: Metadata = {
   description: "Official Website of the Nigerian Safety Investigation Bureau. Enhancing public safety in transportation across Nigeria.",
 };
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import PublicShell from "@/components/layout/PublicShell";
 
 export default function RootLayout({
   children,
@@ -24,11 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${quicksand.variable}`}>
       <body>
-        <Navbar />
-        <div style={{ paddingTop: 'var(--nav-height)' }}>
-          {children}
-        </div>
-        <Footer />
+        <PublicShell>{children}</PublicShell>
       </body>
     </html>
   );

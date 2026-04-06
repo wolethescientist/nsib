@@ -211,3 +211,22 @@ h4 { font-size: 1.25rem; font-weight: 600; line-height: 1.4; }
     grid-template-columns: 1fr;
   }
 }
+
+/* ─── Scroll Reveal — CSS-driven so hidden state is set before JS runs ─── */
+
+/*
+  The [data-sr] attribute is rendered server-side on the div,
+  so the browser reads opacity:0 from the stylesheet on first paint.
+  JavaScript only ever ADDS the transition and flips to the revealed state.
+  This eliminates the JS-sets-opacity-0-after-mount flash entirely.
+*/
+
+[data-sr="up"]    { opacity: 0; transform: translate3d(0,  40px, 0); }
+[data-sr="down"]  { opacity: 0; transform: translate3d(0, -40px, 0); }
+[data-sr="left"]  { opacity: 0; transform: translate3d(40px,  0, 0); }
+[data-sr="right"] { opacity: 0; transform: translate3d(-40px, 0, 0); }
+
+[data-sr].sr-revealed {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}

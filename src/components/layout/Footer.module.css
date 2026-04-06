@@ -34,9 +34,6 @@
 }
 
 .logoContainer {
-  background-color: white;
-  padding: 1rem 1.5rem;
-  border-radius: var(--radius-md, 8px);
   display: inline-flex;
   align-items: center;
   justify-content: center;

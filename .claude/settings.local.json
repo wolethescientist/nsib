@@ -10,7 +10,8 @@
       "WebFetch(domain:shipfinder.co)",
       "WebFetch(domain:www.shipfinder.co)",
       "WebSearch",
-      "WebFetch(domain:www.vesselfinder.com)"
+      "WebFetch(domain:www.vesselfinder.com)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
