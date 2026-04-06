@@ -1,0 +1,668 @@
+/* ══════════════════════════════════════════
+   NSIB Services Page — "Precision Institutional"
+   Light-dominant, structured, authoritative
+   ══════════════════════════════════════════ */
+
+.page {
+  background: var(--nsib-gray-50);
+}
+
+/* ── Page Header ─────────────────────────── */
+.header {
+  background-color: var(--nsib-navy); 
+  padding: 10rem 0 8rem;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 40%), 
+    radial-gradient(circle at bottom left, rgba(226, 48, 48, 0.15) 0%, transparent 50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.floatingElement {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.05);
+  transform: rotateZ(15deg);
+  z-index: 1;
+  animation: float 8s ease-in-out infinite;
+}
+
+.floatingElementSlow {
+  position: absolute;
+  bottom: -10%;
+  left: 5%;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(226,48,48,0.2) 0%, rgba(226,48,48,0) 100%);
+  backdrop-filter: blur(20px);
+  z-index: 1;
+  animation: floatSlow 12s ease-in-out infinite;
+}
+
+.headerInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: end;
+  position: relative;
+  z-index: 2;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.breadcrumb a {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+  color: var(--nsib-navy);
+}
+
+.breadcrumb span:nth-child(2) {
+  color: var(--nsib-red);
+  font-weight: 400;
+}
+
+/* Large bold page title — left-aligned, anchored */
+.pageTitle {
+  font-size: clamp(3.5rem, 6vw, 6rem);
+  font-weight: 800;
+  line-height: 0.95;
+  color: white;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* "Services" line gets a red underline rule as the signature mark */
+.pageTitle span {
+  display: inline-block;
+  position: relative;
+  color: white;
+}
+
+.pageTitle span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.15em;
+  width: 100%;
+  height: 5px;
+  background: var(--nsib-red);
+  border-radius: 2px;
+}
+
+.headerRight {
+  padding-bottom: 0.75rem;
+}
+
+.headerIntro {
+  font-size: 1.15rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  max-width: 480px;
+  text-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.headerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  transition: gap 0.2s ease;
+}
+
+.headerLink:hover {
+  gap: 0.8rem;
+  color: var(--nsib-red);
+}
+
+/* ── Stats Bar ───────────────────────────── */
+.statsBar {
+  background: var(--nsib-navy-dark);
+  padding: 2.5rem 0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.statItem:last-child {
+  border-right: none;
+}
+
+.statValue {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.statLabel {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* ── Services Grid ───────────────────────── */
+.servicesSection {
+  padding: 7rem 0;
+}
+
+.sectionHead {
+  margin-bottom: 3.5rem;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--nsib-red);
+  margin-bottom: 0.6rem;
+}
+
+.sectionTitle {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--nsib-navy);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* 3-col grid — last row has a wide mandate card */
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* ── Service Card ────────────────────────── */
+.serviceCard {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Red accent line slides in from top on hover */
+.serviceCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--nsib-red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.serviceCard:hover::before {
+  transform: scaleX(1);
+}
+
+.serviceCard:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  border-color: transparent;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cardIconWrap {
+  width: 48px;
+  height: 48px;
+  background: var(--nsib-gray-100);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nsib-navy);
+  transition: background 0.3s, color 0.3s;
+  flex-shrink: 0;
+}
+
+.serviceCard:hover .cardIconWrap {
+  background: var(--nsib-navy);
+  color: white;
+}
+
+.cardNum {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--nsib-gray-200);
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s;
+}
+
+.serviceCard:hover .cardNum {
+  color: var(--nsib-red);
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--nsib-navy);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.cardDesc {
+  font-size: 0.97rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  flex-grow: 1;
+}
+
+.cardBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: var(--nsib-gray-100);
+  color: var(--nsib-slate-light);
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cardCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--nsib-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+  transition: color 0.2s, gap 0.2s;
+  flex-shrink: 0;
+}
+
+.cardCta:hover {
+  color: var(--nsib-red);
+  gap: 0.6rem;
+}
+
+/* ── Mandate Card (wide) ─────────────────── */
+.mandateCard {
+  grid-column: span 3;
+  background: var(--nsib-navy);
+  border-color: transparent;
+  flex-direction: column;
+  gap: 0;
+  padding: 3.5rem 4rem;
+}
+
+.mandateCard::before {
+  background: var(--nsib-red);
+}
+
+.mandateEyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 1.5rem;
+}
+
+.mandateQuote {
+  font-size: 1.5rem;
+  font-style: italic;
+  color: white;
+  line-height: 1.55;
+  font-family: Georgia, 'Times New Roman', serif;
+  margin: 0 0 2rem 0;
+  padding-left: 1.75rem;
+  border-left: 3px solid var(--nsib-red);
+  max-width: 780px;
+}
+
+.mandateLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: color 0.2s, gap 0.2s;
+  padding-left: 1.75rem;
+}
+
+.mandateLink:hover {
+  color: white;
+  gap: 0.65rem;
+}
+
+/* ── Process Section ─────────────────────── */
+.processSection {
+  padding: 7rem 0;
+  background: white;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.processTrack {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+  padding-top: 1rem;
+}
+
+/* Horizontal connector line */
+.processTrack::before {
+  content: "";
+  position: absolute;
+  top: 3.25rem;
+  left: calc(100% / 8);
+  width: calc(100% * 6 / 8);
+  height: 1px;
+  background: linear-gradient(90deg, var(--nsib-navy) 0%, var(--nsib-red) 100%);
+  opacity: 0.2;
+}
+
+.processStep {
+  padding: 0 2.5rem 0 0;
+  position: relative;
+}
+
+.processStep:last-child {
+  padding-right: 0;
+}
+
+.stepNumber {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--nsib-navy);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 6px 20px rgba(27,42,107,0.2);
+  position: relative;
+  z-index: 2;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.processStep:hover .stepNumber {
+  background: var(--nsib-red);
+  transform: scale(1.08);
+}
+
+.stepLine {
+  display: none;
+}
+
+.stepTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--nsib-navy);
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.stepDesc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ── CTA Section ─────────────────────────── */
+.cta {
+  background: var(--nsib-gray-50);
+  padding: 7rem 0;
+}
+
+.ctaInner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6rem;
+  align-items: center;
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 4rem 4.5rem;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Red left accent stripe */
+.ctaInner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: var(--nsib-red);
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.ctaEyebrow {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--nsib-red);
+  margin-bottom: 0.75rem;
+}
+
+.ctaTitle {
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 700;
+  color: var(--nsib-navy);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.ctaDesc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 480px;
+}
+
+.ctaRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.25rem;
+  flex-shrink: 0;
+}
+
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 2rem;
+  background: var(--nsib-red);
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--radius-md);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.ctaBtn:hover {
+  background: var(--nsib-red-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(226, 48, 48, 0.3);
+  gap: 0.9rem;
+}
+
+.ctaGhost {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+
+.ctaGhost:hover {
+  color: var(--nsib-navy);
+}
+
+/* ── Responsive ──────────────────────────── */
+@media (max-width: 1100px) {
+  .servicesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mandateCard {
+    grid-column: span 2;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .mandateQuote {
+    padding-left: 1.5rem;
+  }
+
+  .processTrack {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+
+  .processTrack::before {
+    display: none;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .statItem {
+    border-right: none;
+    background: var(--nsib-navy);
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerInner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .servicesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .mandateCard {
+    grid-column: span 1;
+  }
+
+  .processTrack {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .ctaInner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 3rem 2rem;
+  }
+
+  .ctaRight {
+    align-items: flex-start;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

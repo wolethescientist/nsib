@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\(p.dependencies.next\\)\")",
+      "WebFetch(domain:nsib.gov.ng)",
+      "Bash(python3 \"C:/Users/david/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"government safety bureau institutional history timeline\" --design-system -p \"NSIB History\")",
+      "Bash(python3 -c \"import os; os.environ['PYTHONIOENCODING']='utf-8'\")",
+      "Bash(PYTHONIOENCODING=utf-8 python3 \"C:/Users/david/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"government safety bureau institutional history timeline\" --design-system -p \"NSIB History\")",
+      "Bash(PYTHONIOENCODING=utf-8 python3 \"C:/Users/david/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"animation timeline scroll reveal\" --domain ux)",
+      "WebFetch(domain:shipfinder.co)",
+      "WebFetch(domain:www.shipfinder.co)",
+      "WebSearch",
+      "WebFetch(domain:www.vesselfinder.com)"
+    ]
+  }
+}

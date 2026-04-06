@@ -1,0 +1,303 @@
+/* ============================
+   NSIB OLC Login — Civic Precision
+   ============================ */
+
+.page {
+  min-height: calc(100vh - var(--nav-height));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ============================
+   Brand Panel (left)
+   ============================ */
+.brand {
+  background: linear-gradient(160deg, var(--nsib-navy-dark) 0%, #0d1435 100%);
+  padding: 4rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: radial-gradient(circle at 2px 2px, white 2px, transparent 0);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.brandAccent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--nsib-red), var(--nsib-red-light));
+}
+
+.brandInner {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+}
+
+.brandLabel {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--nsib-red-light);
+  margin-bottom: 1.25rem;
+}
+
+.brandTitle {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+.brandTitle span {
+  color: var(--nsib-red-light);
+}
+
+.brandDesc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.featureIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(226, 48, 48, 0.15);
+  border: 1px solid rgba(226, 48, 48, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nsib-red-light);
+  flex-shrink: 0;
+}
+
+/* ============================
+   Form Panel (right)
+   ============================ */
+.formPanel {
+  background: var(--nsib-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 3rem;
+}
+
+.formBox {
+  width: 100%;
+  max-width: 400px;
+}
+
+.formHeader {
+  margin-bottom: 2.25rem;
+}
+
+.formTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--nsib-navy);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.formSubtitle {
+  font-size: 0.88rem;
+  color: var(--nsib-slate-light);
+  line-height: 1.5;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.fieldTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--nsib-slate-light);
+}
+
+.forgotLink {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--nsib-red);
+  transition: color 0.15s ease;
+}
+
+.forgotLink:hover {
+  color: var(--nsib-red-dark);
+}
+
+.input {
+  padding: 0.8rem 1rem;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--nsib-gray-50);
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  border-color: var(--nsib-navy);
+  background: white;
+  box-shadow: inset 3px 0 0 var(--nsib-navy);
+}
+
+.input::placeholder {
+  color: var(--nsib-slate-light);
+  opacity: 0.5;
+}
+
+/* Submit */
+.submitBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--nsib-navy);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(27, 42, 107, 0.28);
+  margin-top: 0.25rem;
+}
+
+.submitBtn:hover {
+  background: var(--nsib-navy-light);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(27, 42, 107, 0.35);
+}
+
+.submitArrow {
+  transition: transform 0.2s ease;
+}
+
+.submitBtn:hover .submitArrow {
+  transform: translateX(3px);
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--nsib-slate-light);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0.5rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+/* Register */
+.registerRow {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--nsib-slate-light);
+}
+
+.registerLink {
+  font-weight: 700;
+  color: var(--nsib-navy);
+  transition: color 0.15s ease;
+}
+
+.registerLink:hover {
+  color: var(--nsib-red);
+}
+
+/* ============================
+   Responsive
+   ============================ */
+@media (max-width: 800px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .brand {
+    padding: 3rem 2rem;
+  }
+
+  .brandTitle {
+    font-size: 1.8rem;
+  }
+
+  .featureList {
+    display: none;
+  }
+
+  .brandDesc {
+    margin-bottom: 0;
+  }
+
+  .formPanel {
+    padding: 3rem 2rem;
+  }
+}

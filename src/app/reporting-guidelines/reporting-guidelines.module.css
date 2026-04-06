@@ -1,0 +1,512 @@
+/* =============================================
+   Reporting Guidelines — Authoritative Editorial
+   ============================================= */
+
+/* ── Hero ─────────────────────────────────── */
+.hero {
+  background-color: var(--nsib-navy); 
+  padding: 10rem 2rem 8rem;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 40%), 
+    radial-gradient(circle at bottom left, rgba(226, 48, 48, 0.15) 0%, transparent 50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.floatingElement {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.05);
+  transform: rotateZ(15deg);
+  z-index: 1;
+  animation: float 8s ease-in-out infinite;
+}
+
+.floatingElementSlow {
+  position: absolute;
+  bottom: -10%;
+  left: 5%;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(226,48,48,0.2) 0%, rgba(226,48,48,0) 100%);
+  backdrop-filter: blur(20px);
+  z-index: 1;
+  animation: floatSlow 12s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotateZ(15deg); }
+  50% { transform: translateY(-20px) rotateZ(10deg); }
+  100% { transform: translateY(0px) rotateZ(15deg); }
+}
+
+@keyframes floatSlow {
+  0% { transform: translateY(0px) rotateZ(0deg) scale(1); }
+  50% { transform: translateY(-15px) rotateZ(5deg) scale(1.05); }
+  100% { transform: translateY(0px) rotateZ(0deg) scale(1); }
+}
+
+.heroInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.heroLabel {
+  background-color: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 30px;
+  padding: 0.5rem 1rem;
+  backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 1.25rem;
+}
+
+.heroLabel::before {
+  display: none;
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--nsib-red-light);
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.65);
+  max-width: 560px;
+  line-height: 1.65;
+}
+
+/* ── Emergency Banner ─────────────────────── */
+.emergencyBanner {
+  background: var(--nsib-red);
+  padding: 1.25rem 2rem;
+}
+
+.emergencyBannerInner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.emergencyLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.emergencyIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.emergencyText {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.01em;
+}
+
+.emergencyNumber {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ── Page Body ────────────────────────────── */
+.body {
+  background: var(--nsib-gray-50);
+  padding: 4rem 2rem 6rem;
+}
+
+.bodyInner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+/* ── Section Header ───────────────────────── */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.sectionAccent {
+  width: 4px;
+  height: 2.25rem;
+  background: var(--nsib-red);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--nsib-navy);
+  letter-spacing: -0.02em;
+}
+
+/* ── When to Report Card ──────────────────── */
+.whenCard {
+  background: var(--nsib-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--nsib-gray-200);
+  box-shadow: var(--shadow-sm);
+  padding: 2.5rem;
+}
+
+.whenText {
+  font-size: 1.05rem;
+  color: var(--nsib-slate);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+}
+
+.modesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.modeItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--nsib-gray-100);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--nsib-gray-200);
+}
+
+.modeIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.modeName {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--nsib-navy);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ── Steps Timeline ───────────────────────── */
+.stepsCard {
+  background: var(--nsib-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--nsib-gray-200);
+  box-shadow: var(--shadow-sm);
+  padding: 2.5rem;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.timelineItem {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.timelineItem:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(2.5rem - 1px);
+  top: 4.5rem;
+  bottom: -1rem;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--nsib-gray-200), transparent);
+}
+
+.stepNumWrap {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.25rem;
+}
+
+.stepNum {
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--nsib-navy);
+  background: var(--nsib-gray-100);
+  border: 2px solid var(--nsib-gray-200);
+  letter-spacing: -0.03em;
+  flex-shrink: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.timelineItem:hover .stepNum {
+  background: var(--nsib-navy);
+  color: #fff;
+  border-color: var(--nsib-navy);
+}
+
+.stepContent {
+  padding: 0.75rem 0 2.5rem;
+}
+
+.stepTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--nsib-navy);
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.01em;
+}
+
+.stepDesc {
+  font-size: 0.975rem;
+  color: var(--nsib-slate);
+  line-height: 1.7;
+}
+
+.stepDesc a {
+  color: var(--nsib-red);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(226,48,48,0.35);
+  transition: border-color 0.15s ease;
+}
+
+.stepDesc a:hover {
+  border-color: var(--nsib-red);
+}
+
+.stepBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  background: rgba(226,48,48,0.08);
+  color: var(--nsib-red-dark);
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Required Details Card ────────────────── */
+.detailsCard {
+  background: var(--nsib-navy);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.detailsCard::before {
+  content: '';
+  position: absolute;
+  right: -4rem;
+  top: -4rem;
+  width: 16rem;
+  height: 16rem;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.detailsCard .sectionTitle {
+  color: #ffffff;
+}
+
+.detailsCard .sectionAccent {
+  background: rgba(255,255,255,0.4);
+}
+
+.detailsIntro {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 1.75rem;
+  line-height: 1.65;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.875rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.125rem;
+  background: rgba(255,255,255,0.07);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.detailCheck {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--nsib-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  color: white;
+  font-weight: 700;
+}
+
+.detailLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.01em;
+}
+
+/* ── CTA ──────────────────────────────────── */
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2.25rem 2.5rem;
+  background: var(--nsib-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--nsib-gray-200);
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+}
+
+.ctaText h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--nsib-navy);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.ctaText p {
+  font-size: 0.925rem;
+  color: var(--nsib-slate-light);
+}
+
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 2rem;
+  background: var(--nsib-red);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.925rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(226, 48, 48, 0.35);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ctaBtn:hover {
+  background: var(--nsib-red-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(226, 48, 48, 0.45);
+}
+
+.ctaArrow {
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.ctaBtn:hover .ctaArrow {
+  transform: translateX(4px);
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 640px) {
+  .modesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .timelineItem {
+    grid-template-columns: 3.5rem 1fr;
+    gap: 1rem;
+  }
+
+  .stepNum {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.15rem;
+  }
+
+  .timelineItem:not(:last-child)::after {
+    left: calc(1.75rem - 1px);
+  }
+
+  .cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .emergencyBannerInner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

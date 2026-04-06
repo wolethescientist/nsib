@@ -1,0 +1,343 @@
+/* ─── Vessel Tracker Page ────────────────────────────────────────────── */
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+.header {
+  background: linear-gradient(135deg, #071a2e 0%, #0a1a3a 60%, #071220 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2.5rem 0 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Wave-pattern dot grid — nautical chart aesthetic */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  background-image: radial-gradient(circle at 2px 2px, white 2px, transparent 0);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* Subtle horizontal wave lines layered over the dot grid */
+.header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 38px,
+    rgba(32, 200, 210, 0.6) 38px,
+    rgba(32, 200, 210, 0.6) 40px
+  );
+  pointer-events: none;
+}
+
+.headerInner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.breadcrumb {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #20c8d2;
+  margin-bottom: 1rem;
+}
+
+.headerTitle {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.6rem;
+}
+
+.headerSub {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 440px;
+}
+
+/* Live Badge — teal for maritime, not red */
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(32, 200, 210, 0.1);
+  border: 1px solid rgba(32, 200, 210, 0.3);
+  border-radius: 100px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #4dd9e0;
+  white-space: nowrap;
+  margin-top: 0.25rem;
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #20c8d2;
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.65); }
+}
+
+/* ── Stats Strip ─────────────────────────────────────────────────────── */
+.statsStrip {
+  background: #060f1e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0;
+}
+
+.statsInner {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.statItem {
+  flex: 1;
+  padding: 1.1rem 1.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.statItem:last-child {
+  border-right: none;
+}
+
+.statLabel {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.statValue {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.statValueGreen {
+  color: #4ade80;
+}
+
+/* ── Map Container ───────────────────────────────────────────────────── */
+.mapOuter {
+  flex: 1;
+  min-height: 72vh;
+  background: #040d1a;
+  position: relative;
+  overflow: hidden;
+}
+
+/* AIS sonar grid — horizontal/vertical lines like a nautical chart */
+.sonarGrid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(32, 200, 210, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(32, 200, 210, 0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Concentric sonar rings — the marine equivalent of radar rings */
+.sonarRings {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sonarRings::before,
+.sonarRings::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(32, 200, 210, 0.18);
+  animation: sonarExpand 4s ease-out infinite;
+}
+
+.sonarRings::before {
+  width: 55vw;
+  height: 55vw;
+  max-width: 800px;
+  max-height: 800px;
+  animation-delay: 0s;
+}
+
+.sonarRings::after {
+  width: 32vw;
+  height: 32vw;
+  max-width: 460px;
+  max-height: 460px;
+  animation-delay: 2s;
+}
+
+@keyframes sonarExpand {
+  0%   { opacity: 0.5; }
+  50%  { opacity: 0.15; }
+  100% { opacity: 0.5; }
+}
+
+/* A third inner ring using a child element */
+.sonarRingInner {
+  position: absolute;
+  width: 15vw;
+  height: 15vw;
+  max-width: 220px;
+  max-height: 220px;
+  border-radius: 50%;
+  border: 1px solid rgba(32, 200, 210, 0.3);
+  animation: sonarExpand 4s ease-out 1s infinite;
+}
+
+/* Iframe fills the container */
+.mapIframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  z-index: 2;
+}
+
+/* Placeholder shown before iframe is embedded */
+.mapPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  z-index: 2;
+}
+
+.placeholderIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(32, 200, 210, 0.08);
+  border: 1px solid rgba(32, 200, 210, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(32, 200, 210, 0.5);
+}
+
+.placeholderTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.placeholderNote {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.18);
+  text-align: center;
+  max-width: 300px;
+  line-height: 1.6;
+}
+
+/* ── Footer Bar ──────────────────────────────────────────────────────── */
+.footerBar {
+  background: #060f1e;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1rem 0;
+}
+
+.footerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.footerNote {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 1.6;
+}
+
+.footerNote strong {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footerLink {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.footerLink:hover {
+  color: #4dd9e0;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .statsInner {
+    flex-wrap: wrap;
+  }
+
+  .statItem {
+    flex: 1 1 45%;
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .headerInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footerInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

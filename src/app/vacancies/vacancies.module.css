@@ -1,0 +1,238 @@
+.pageContainer {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding-bottom: 8rem;
+}
+
+.heroHeader {
+  padding: 10rem 2rem 5rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.title {
+  color: var(--nsib-navy);
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  position: relative;
+  z-index: 10;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.6;
+  position: relative;
+  z-index: 10;
+}
+
+.mainContent {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 20;
+}
+
+.statusCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 5rem 4rem;
+  text-align: center;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.04),
+    0 1px 3px rgba(0, 0, 0, 0.02);
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease;
+}
+
+.statusCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 30px 60px rgba(27, 42, 107, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.statusCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, var(--nsib-navy) 0%, var(--nsib-red) 100%);
+}
+
+.statusIcon {
+  width: 80px;
+  height: 80px;
+  background: rgba(226, 48, 48, 0.08);
+  color: var(--nsib-red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2.5rem;
+  font-size: 2rem;
+}
+
+.statusCard h2 {
+  color: var(--nsib-navy);
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.statusCard p {
+  color: var(--text-secondary);
+  font-size: 1.15rem;
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+.notifyForm {
+  display: flex;
+  gap: 1rem;
+  max-width: 550px;
+  margin: 0 auto;
+}
+
+.inputField {
+  flex-grow: 1;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #f8fafc;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--nsib-navy);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.inputField::placeholder {
+  color: #94a3b8;
+}
+
+.inputField:focus {
+  border-color: rgba(27, 42, 107, 0.3);
+  box-shadow: 0 0 0 4px rgba(27, 42, 107, 0.05);
+  background: white;
+}
+
+.submitBtn {
+  padding: 0 2.5rem;
+  border-radius: 12px;
+  background: var(--nsib-red);
+  color: white;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submitBtn:hover {
+  background: #c22020;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(226, 48, 48, 0.2);
+}
+
+.valueSection {
+  margin-top: 6rem;
+}
+
+.valueHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.valueHeader h3 {
+  font-size: 2rem;
+  color: var(--nsib-navy);
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.valueHeader p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+}
+
+.valueItem {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  height: 100%;
+}
+
+.valueItem:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.05);
+}
+
+.valueIcon {
+  width: 56px;
+  height: 56px;
+  background: var(--nsib-navy);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.valueItem h4 {
+  font-size: 1.3rem;
+  color: var(--nsib-navy);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.valueItem p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 900px) {
+  .valuesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .statusCard {
+    padding: 3rem 1.5rem;
+  }
+  .notifyForm {
+    flex-direction: column;
+  }
+  .submitBtn {
+    padding: 1.25rem;
+  }
+}
