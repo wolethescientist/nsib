@@ -1,8 +1,9 @@
+import type { Metadata } from 'next';
 import SocialFeedSection from '@/components/ui/SocialFeedSection';
 import Link from 'next/link';
 import styles from './page.module.css';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Social Media | NSIB',
   description: 'Follow the Nigerian Safety Investigation Bureau on social media for the latest updates.',
 };
@@ -21,7 +22,7 @@ export default function SocialPage() {
       </section>
 
       {/* Live Feeds */}
-      <SocialFeedSection compact={false} />
+      <SocialFeedSection />
 
       {/* Follow buttons for all 4 platforms */}
       <section className={styles.followSection}>
