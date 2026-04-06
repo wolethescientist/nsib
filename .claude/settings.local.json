@@ -11,7 +11,11 @@
       "WebFetch(domain:www.shipfinder.co)",
       "WebSearch",
       "WebFetch(domain:www.vesselfinder.com)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git -C /c/Users/david/nsib-site diff 343592dcd2d2717aee7188c07cf74157b40a162d..5895586c15419092caf4515a57365cf8a53a1bf6 -- src/components/ui/SocialFeedSection.tsx)",
+      "Bash(node -e \"const r = require\\('/c/Users/david/nsib-site/node_modules/@types/react/index.d.ts'\\); console.log\\('ok'\\)\")"
     ]
   }
 }
