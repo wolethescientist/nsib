@@ -1,9 +1,107 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
+interface Report {
+  id: string;
+  title: string;
+  type: string;
+  sector: "aviation" | "maritime" | "railway";
+  description?: string;
+  file_url: string;
+  published_at: string;
+  status: string;
+}
+
+interface NewsItem {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  published_at: string;
+  author_name: string;
+}
+
+const SECTOR_IMAGES: Record<string, string> = {
+  aviation: "https://images.unsplash.com/photo-1542296332-2e4473faf563?q=80&w=2070&auto=format&fit=crop",
+  maritime: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=2070&auto=format&fit=crop",
+  railway: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=2084&auto=format&fit=crop",
+};
+
+const TYPE_LABEL: Record<string, string> = {
+  preliminary: "Preliminary",
+  final: "Published",
+  interim: "Ongoing",
+  safety_bulletin: "Bulletin",
+};
+
+const SECTOR_LABEL: Record<string, string> = {
+  aviation: "Aviation",
+  maritime: "Maritime",
+  railway: "Railway",
+};
+
+const PLACEHOLDER_REPORTS = [
+  { type: 'Aviation', title: 'Preliminary Report on Aircraft Incident at MMIA', date: 'Oct 12, 2024', status: 'Preliminary', image: SECTOR_IMAGES.aviation, sector: 'aviation', href: '/air-reports' },
+  { type: 'Maritime', title: 'Investigation into Vessel Collision at Apapa Port', date: 'Sep 28, 2024', status: 'Ongoing', image: SECTOR_IMAGES.maritime, sector: 'maritime', href: '/marine-reports' },
+  { type: 'Railway', title: 'Final Report on Passenger Train Derailment', date: 'Aug 15, 2024', status: 'Published', image: SECTOR_IMAGES.railway, sector: 'railway', href: '/rail-reports' },
+];
+
+function formatDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString("en-NG", { year: "numeric", month: "short", day: "numeric" });
+}
+
 export default function Home() {
+  const [dynamicReports, setDynamicReports] = useState<Report[]>([]);
+  const [dynamicNews, setDynamicNews] = useState<NewsItem[]>([]);
+
+  useEffect(() => {
+    fetch("/api/reports?limit=6")
+      .then(r => r.json())
+      .then(data => {
+        if (data.reports?.length) setDynamicReports(data.reports);
+      })
+      .catch(() => {/* silently fall back to placeholders */});
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/news?limit=3")
+      .then(r => r.json())
+      .then(data => {
+        if (data.news?.length) setDynamicNews(data.news);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Merge: show up to 3 dynamic reports first, then placeholders if not enough
+  const displayReports = dynamicReports.length >= 3
+    ? dynamicReports.slice(0, 3).map(r => ({
+        type: SECTOR_LABEL[r.sector] || r.sector,
+        title: r.title,
+        date: formatDate(r.published_at),
+        status: TYPE_LABEL[r.type] || r.type,
+        image: SECTOR_IMAGES[r.sector] || SECTOR_IMAGES.aviation,
+        sector: r.sector,
+        href: r.file_url,
+        isDynamic: true,
+      }))
+    : [
+        ...dynamicReports.slice(0, 3).map(r => ({
+          type: SECTOR_LABEL[r.sector] || r.sector,
+          title: r.title,
+          date: formatDate(r.published_at),
+          status: TYPE_LABEL[r.type] || r.type,
+          image: SECTOR_IMAGES[r.sector] || SECTOR_IMAGES.aviation,
+          sector: r.sector,
+          href: r.file_url,
+          isDynamic: true,
+        })),
+        ...PLACEHOLDER_REPORTS.slice(dynCards(dynamicReports.length)),
+      ];
 
   return (
     <main className={styles.main}>
@@ -145,9 +243,9 @@ export default function Home() {
             <span className={styles.sectionLabel}>Leadership</span>
             <h2>A Commitment to Safety Excellence</h2>
             <blockquote className={styles.dgQuote}>
-              "Our overarching mandate is to enhance safety in Nigeria's transport sector by determining the underlying causes of accidents and recommending proactive measures to prevent recurrences. Excellence in safety is not merely a goal; it's our fundamental operational standard."
+              &quot;Our overarching mandate is to enhance safety in Nigeria&apos;s transport sector by determining the underlying causes of accidents and recommending proactive measures to prevent recurrences. Excellence in safety is not merely a goal; it&apos;s our fundamental operational standard.&quot;
             </blockquote>
-            <Link href="/about/leadership" className="btn btn-outline" style={{ border: '2px solid var(--nsib-navy)', color: 'var(--nsib-navy)', padding: '0.75rem 1.5rem' }}>
+            <Link href="/about/leadership" className="btn btn-outline">
               Read Full Profile
             </Link>
           </ScrollReveal>
@@ -200,20 +298,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Recent Investigations */}
+      {/* 5. Recent Investigations — now dynamic */}
       <section className={styles.investigationsSection}>
         <div className="container">
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionLabel}>Transparency & Reporting</span>
+            <span className={styles.sectionLabel}>Transparency &amp; Reporting</span>
             <h2>Recent Investigations</h2>
           </div>
 
           <div className={styles.cardsGrid}>
-            {[
-              { type: 'Aviation', title: 'Preliminary Report on Aircraft Incident at MMIA', date: 'Oct 12, 2024', status: 'Preliminary', image: 'https://images.unsplash.com/photo-1542296332-2e4473faf563?q=80&w=2070&auto=format&fit=crop' },
-              { type: 'Maritime', title: 'Investigation into Vessel Collision at Apapa Port', date: 'Sep 28, 2024', status: 'Ongoing', image: 'https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=2070&auto=format&fit=crop' },
-              { type: 'Railway', title: 'Final Report on Passenger Train Derailment', date: 'Aug 15, 2024', status: 'Published', image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=2084&auto=format&fit=crop' }
-            ].map((item, index) => (
+            {displayReports.slice(0, 3).map((item, index) => (
               <ScrollReveal direction="up" delay={0.2 + index * 0.15} distance={40} key={index} className={styles.investigationCard}>
                 <div className={styles.invImageWrapper}>
                   <Image src={item.image} alt={item.title} fill className={styles.invImage} sizes="(max-width: 768px) 100vw, 33vw" unoptimized/>
@@ -221,14 +315,20 @@ export default function Home() {
                 <div className={styles.invCardBody}>
                   <div className={styles.cardHeader}>
                     <span className={styles.cardType}>{item.type}</span>
-                    <span className={`${styles.cardStatus} ${styles[item.status.toLowerCase()]}`}>{item.status}</span>
+                    <span className={`${styles.cardStatus} ${styles[(item.status?.toLowerCase().replace(/\s/g, '') || 'preliminary')]}`}>{item.status}</span>
                   </div>
                   <h3>{item.title}</h3>
                   <div className={styles.cardFooter}>
                     <span className={styles.cardDate}>{item.date}</span>
-                    <Link href={`/${item.type.toLowerCase()}-reports`} className={styles.cardAction}>
-                      Read Document <span className={styles.arrow}>→</span>
-                    </Link>
+                    {'isDynamic' in item && item.isDynamic ? (
+                      <a href={item.href} target="_blank" rel="noopener noreferrer" className={styles.cardAction}>
+                        Read Document <span className={styles.arrow}>→</span>
+                      </a>
+                    ) : (
+                      <Link href={`/${item.sector}-reports`} className={styles.cardAction}>
+                        Read Document <span className={styles.arrow}>→</span>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </ScrollReveal>
@@ -236,7 +336,7 @@ export default function Home() {
           </div>
           
           <ScrollReveal direction="up" delay={0.6} className={styles.centerAction}>
-            <Link href="/publications" className="btn btn-outline" style={{ border: '2px solid var(--nsib-navy)', color: 'var(--nsib-navy)' }}>
+            <Link href="/publications" className="btn btn-outline">
               Browse Database
             </Link>
           </ScrollReveal>
@@ -252,14 +352,17 @@ export default function Home() {
             <Link href="/news" className="btn btn-primary" style={{ marginTop: '1rem' }}>View All News</Link>
           </ScrollReveal>
           <div className={styles.newsList}>
-            {[
-              { title: 'NSIB signs MoU with the Nigerian Navy for Maritime Safety', date: 'Oct 05, 2024' },
-              { title: 'Director General Keynote at Annual Transport Safety Summit', date: 'Sep 14, 2024' },
-              { title: 'New Safety Recommendations Issued for Domestic Airlines', date: 'Sep 02, 2024' }
-            ].map((news, i) => (
+            {(dynamicNews.length > 0
+              ? dynamicNews.map(n => ({ title: n.title, date: formatDate(n.published_at), id: n.id }))
+              : [
+                  { title: 'NSIB signs MoU with the Nigerian Navy for Maritime Safety', date: 'Oct 05, 2024', id: null },
+                  { title: 'Director General Keynote at Annual Transport Safety Summit', date: 'Sep 14, 2024', id: null },
+                  { title: 'New Safety Recommendations Issued for Domestic Airlines', date: 'Sep 02, 2024', id: null }
+                ]
+            ).map((news, i) => (
               <ScrollReveal direction="up" delay={0.2 + i * 0.15} key={i} className={styles.newsItem}>
                 <span className={styles.newsDate}>{news.date}</span>
-                <h4><Link href="/news">{news.title}</Link></h4>
+                <h4><Link href={news.id ? `/news/${news.id}` : "/news"}>{news.title}</Link></h4>
               </ScrollReveal>
             ))}
           </div>
@@ -286,4 +389,8 @@ export default function Home() {
       </section>
     </main>
   );
+}
+
+function dynCards(count: number): number {
+  return Math.min(count, 3);
 }

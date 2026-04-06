@@ -11,19 +11,30 @@ const HERO_PAGES = ["/"];
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
   const hasHero = HERO_PAGES.includes(pathname);
 
   useEffect(() => {
-    // Close mobile menu on route change
     setMobileMenuOpen(false);
+    // Reset scrolled when navigating to a new page
+    setScrolled(window.scrollY > 20);
   }, [pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
+    // Check immediately on mount in case page was loaded mid-scroll
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then(r => r.json())
+      .then(data => setIsLoggedIn(!!data.user))
+      .catch(() => setIsLoggedIn(false));
+  }, [pathname]);
 
   const isSolid = scrolled || !hasHero;
 
@@ -89,6 +100,7 @@ export default function Navbar() {
           <div className={styles.navItem}>
             <Link href="/publications">News & Pubs <span className={styles.chevron}>▼</span></Link>
             <div className={styles.dropdown}>
+              <Link href="/news" className={styles.dropdownLink}>News & Updates</Link>
               <Link href="/legislations" className={styles.dropdownLink}>Legislations</Link>
               <Link href="/mou" className={styles.dropdownLink}>MOU</Link>
               <Link href="/rail-reports" className={styles.dropdownLink}>Rail Accident Reports</Link>
@@ -111,6 +123,22 @@ export default function Navbar() {
           </div>
 
           <Link href="/reporting" className={`btn btn-secondary ${styles.reportBtn}`}>Report Accident</Link>
+
+          {isLoggedIn ? (
+            <Link href="/dashboard" className={styles.loginBtn}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+              </svg>
+              Dashboard
+            </Link>
+          ) : (
+            <Link href="/login" className={styles.loginBtn}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+              Staff Login
+            </Link>
+          )}
         </nav>
       </div>
     </header>

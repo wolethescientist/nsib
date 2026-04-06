@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import Link from 'next/link';
+import AuthRedirectButton from '@/components/ui/AuthRedirectButton';
 
 // SVGs
 const DownloadIcon = () => (
@@ -190,9 +191,8 @@ export default function AirReportsPage() {
               </div>
 
               {/* Submit Report CTA */}
-              <button 
+              <AuthRedirectButton
                 className="submit-report-btn"
-                onClick={() => alert("Trigger aircraft file upload or modal here")}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -219,7 +219,7 @@ export default function AirReportsPage() {
               >
                 <UploadIcon />
                 Submit New Report
-              </button>
+              </AuthRedirectButton>
             </div>
           </ScrollReveal>
         </div>
