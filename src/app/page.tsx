@@ -6,6 +6,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import CalendarEventsSection from "@/components/ui/CalendarEventsSection";
+import SocialFeedSection from "@/components/ui/SocialFeedSection";
 import { teamMembers } from "@/app/team/data";
 
 interface Report {
@@ -635,10 +636,13 @@ export default function Home() {
       {/* ── 11. UPCOMING EVENTS ── */}
       <CalendarEventsSection events={displayEvents} />
 
-      {/* ── 12. PARTNERS ── */}
+      {/* ── 12. SOCIAL FEED ── */}
+      <SocialFeedSection compact />
+
+      {/* ── 13. PARTNERS ── */}
       <PartnersSlideshow />
 
-      {/* ── 13. CTA ── */}
+      {/* ── 14. CTA ── */}
       <section className={styles.ctaSection}>
         <div className={styles.ctaBackgroundPattern} />
         <div className={`container ${styles.ctaContainer}`}>
