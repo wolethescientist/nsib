@@ -1,0 +1,81 @@
+.hero {
+  background: var(--nsib-navy);
+  padding: 6rem 0 4rem;
+}
+
+.heroInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--nsib-white);
+  margin: 0;
+}
+
+.heroSubtitle {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 560px;
+  margin: 0;
+}
+
+.followSection {
+  padding: 6rem 0;
+  background: var(--nsib-white);
+}
+
+.followInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.followTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--nsib-navy);
+  margin: 0;
+}
+
+.followGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.followBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  color: var(--nsib-white);
+}
+
+.followBtn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+.facebook  { background: #1877F2; }
+.xTwitter  { background: #000000; }
+.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.linkedin  { background: #0A66C2; }
+
+@media (max-width: 640px) {
+  .heroTitle { font-size: 2rem; }
+  .followBtn { width: 100%; justify-content: center; }
+  .followGrid { flex-direction: column; }
+}
