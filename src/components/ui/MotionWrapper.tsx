@@ -9,7 +9,7 @@ type MotionProps = {
   className?: string;
   style?: React.CSSProperties;
 };
-//div fix
+//div fix now
 export function FadeIn({ children, delay = 0, className = "", style }: MotionProps) {
   return (
     <motion.div
