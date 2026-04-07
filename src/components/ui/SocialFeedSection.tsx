@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import styles from './SocialFeedSection.module.css';
 
@@ -8,7 +8,11 @@ declare global {
   interface Window {
     twttr?: {
       widgets: {
-        load: (el?: HTMLElement) => void;
+        createTimeline: (
+          source: { sourceType: string; screenName: string },
+          el: HTMLElement,
+          options: Record<string, unknown>
+        ) => Promise<HTMLElement | null>;
       };
     };
   }
@@ -18,6 +22,54 @@ interface Props {
   compact?: boolean;
 }
 
+// Measures container width via ResizeObserver; resolves the width-mismatch bug
+// in the Facebook Page Plugin where adapt_container_width only resizes the outer
+// iframe shell, not the plugin content inside it.
+function FacebookEmbed({ height }: { height: number }) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [src, setSrc] = useState<string>('');
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const buildSrc = (w: number) =>
+      `https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=${Math.floor(w)}&height=${height}&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false`;
+
+    const ro = new ResizeObserver((entries) => {
+      const width = entries[0].contentRect.width;
+      if (width > 0) setSrc(buildSrc(width));
+    });
+
+    ro.observe(wrapper);
+    // Seed immediately in case ResizeObserver fires late
+    const initial = wrapper.getBoundingClientRect().width;
+    if (initial > 0) setSrc(buildSrc(initial));
+
+    return () => ro.disconnect();
+  }, [height]);
+
+  return (
+    <div ref={wrapperRef} className={styles.embedWrapper} style={{ minHeight: height }}>
+      {src && (
+        <iframe
+          key={src}
+          src={src}
+          width="100%"
+          height={height}
+          style={{ border: 'none', overflow: 'hidden', display: 'block' }}
+          sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          title="NSIB Facebook Page"
+        />
+      )}
+    </div>
+  );
+}
+
+// Uses the programmatic twttr.widgets.createTimeline() API rather than the
+// anchor-tag approach, which is unreliable when the script loads after the
+// anchor is already in the DOM.
 function XTimelineEmbed({ height }: { height: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,45 +77,52 @@ function XTimelineEmbed({ height }: { height: number }) {
     const container = containerRef.current;
     if (!container) return;
 
-    const load = () => {
-      if (window.twttr?.widgets) {
-        window.twttr.widgets.load(container);
-      }
+    let cancelled = false;
+
+    const render = () => {
+      if (cancelled || !container || !window.twttr?.widgets) return;
+      // Clear any previous render attempt
+      container.innerHTML = '';
+      window.twttr.widgets.createTimeline(
+        { sourceType: 'profile', screenName: 'nsibofficial' },
+        container,
+        { height, theme: 'light', chrome: 'noheader nofooter noborders' }
+      );
     };
 
     let injected: HTMLScriptElement | null = null;
 
-    if (window.twttr) {
-      load();
+    if (window.twttr?.widgets) {
+      render();
     } else if (!document.querySelector('script[src*="widgets.js"]')) {
       injected = document.createElement('script');
       injected.src = 'https://platform.twitter.com/widgets.js';
       injected.async = true;
       injected.charset = 'utf-8';
-      injected.onload = load;
+      injected.onload = render;
       document.body.appendChild(injected);
+    } else {
+      // Script already injected by another instance — poll until ready
+      const interval = setInterval(() => {
+        if (window.twttr?.widgets) {
+          clearInterval(interval);
+          render();
+        }
+      }, 100);
+      return () => clearInterval(interval);
     }
 
     return () => {
+      cancelled = true;
       if (injected) {
         injected.onload = null;
         document.body.removeChild(injected);
       }
     };
-  }, []);
+  }, [height]);
 
   return (
-    <div ref={containerRef} className={styles.embedWrapper} style={{ minHeight: height }}>
-      <a
-        className="twitter-timeline"
-        data-height={height}
-        data-theme="light"
-        data-chrome="noheader nofooter noborders"
-        href="https://twitter.com/nsibofficial"
-      >
-        Posts by @nsibofficial
-      </a>
-    </div>
+    <div ref={containerRef} className={styles.embedWrapper} style={{ minHeight: height }} />
   );
 }
 
@@ -120,17 +179,7 @@ export default function SocialFeedSection({ compact = false }: Props) {
                 Follow ↗
               </a>
             </div>
-            <div className={styles.embedWrapper} style={{ minHeight: height }}>
-              <iframe
-                src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&height=${height}&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false`}
-                width="100%"
-                height={height}
-                style={{ border: 'none', overflow: 'hidden', display: 'block' }}
-                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                title="NSIB Facebook Page"
-              />
-            </div>
+            <FacebookEmbed height={height} />
           </div>
 
           {/* X / Twitter card */}
