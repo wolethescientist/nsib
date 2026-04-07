@@ -22,107 +22,131 @@ interface Props {
   compact?: boolean;
 }
 
-// Measures container width via ResizeObserver; resolves the width-mismatch bug
-// in the Facebook Page Plugin where adapt_container_width only resizes the outer
-// iframe shell, not the plugin content inside it.
+// Facebook Page Plugin caps at 500px internally regardless of iframe width.
+// We cap the wrapper at 500px and match its background to blend the gap.
 function FacebookEmbed({ height }: { height: number }) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [src, setSrc] = useState<string>('');
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-
-    const buildSrc = (w: number) =>
-      `https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=${Math.floor(w)}&height=${height}&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false`;
-
-    const ro = new ResizeObserver((entries) => {
-      const width = entries[0].contentRect.width;
-      if (width > 0) setSrc(buildSrc(width));
-    });
-
-    ro.observe(wrapper);
-    // Seed immediately in case ResizeObserver fires late
-    const initial = wrapper.getBoundingClientRect().width;
-    if (initial > 0) setSrc(buildSrc(initial));
-
-    return () => ro.disconnect();
-  }, [height]);
-
   return (
-    <div ref={wrapperRef} className={styles.embedWrapper} style={{ minHeight: height }}>
-      {src && (
+    <div className={styles.fbWrapper}>
+      <div className={styles.fbInner} style={{ height }}>
         <iframe
-          key={src}
-          src={src}
-          width="100%"
+          src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=500&height=${height}&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=false`}
+          width="500"
           height={height}
           style={{ border: 'none', overflow: 'hidden', display: 'block' }}
           sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
           allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
           title="NSIB Facebook Page"
         />
-      )}
+      </div>
     </div>
   );
 }
 
-// Uses the programmatic twttr.widgets.createTimeline() API rather than the
-// anchor-tag approach, which is unreliable when the script loads after the
-// anchor is already in the DOM.
 function XTimelineEmbed({ height }: { height: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [status, setStatus] = useState<'loading' | 'loaded' | 'failed'>('loading');
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     let cancelled = false;
+    let timer: ReturnType<typeof setTimeout>;
 
     const render = () => {
       if (cancelled || !container || !window.twttr?.widgets) return;
-      // Clear any previous render attempt
       container.innerHTML = '';
-      window.twttr.widgets.createTimeline(
-        { sourceType: 'profile', screenName: 'nsibofficial' },
-        container,
-        { height, theme: 'light', chrome: 'noheader nofooter noborders' }
-      );
+      window.twttr.widgets
+        .createTimeline(
+          { sourceType: 'profile', screenName: 'nsibofficial' },
+          container,
+          { height, theme: 'light', chrome: 'noheader nofooter noborders transparent' }
+        )
+        .then((el) => {
+          if (!cancelled) setStatus(el ? 'loaded' : 'failed');
+        })
+        .catch(() => {
+          if (!cancelled) setStatus('failed');
+        });
     };
 
     let injected: HTMLScriptElement | null = null;
 
-    if (window.twttr?.widgets) {
-      render();
-    } else if (!document.querySelector('script[src*="widgets.js"]')) {
-      injected = document.createElement('script');
-      injected.src = 'https://platform.twitter.com/widgets.js';
-      injected.async = true;
-      injected.charset = 'utf-8';
-      injected.onload = render;
-      document.body.appendChild(injected);
-    } else {
-      // Script already injected by another instance — poll until ready
-      const interval = setInterval(() => {
-        if (window.twttr?.widgets) {
+    const tryRender = () => {
+      if (window.twttr?.widgets) {
+        render();
+      } else if (!document.querySelector('script[src*="widgets.js"]')) {
+        injected = document.createElement('script');
+        injected.src = 'https://platform.twitter.com/widgets.js';
+        injected.async = true;
+        injected.charset = 'utf-8';
+        injected.onload = render;
+        document.body.appendChild(injected);
+      } else {
+        // Script injected but not ready yet — poll
+        const interval = setInterval(() => {
+          if (window.twttr?.widgets) {
+            clearInterval(interval);
+            render();
+          }
+        }, 100);
+        timer = setTimeout(() => {
           clearInterval(interval);
-          render();
-        }
-      }, 100);
-      return () => clearInterval(interval);
-    }
+          if (!cancelled) setStatus('failed');
+        }, 8000); // give up after 8s
+      }
+    };
+
+    tryRender();
 
     return () => {
       cancelled = true;
+      clearTimeout(timer);
       if (injected) {
         injected.onload = null;
-        document.body.removeChild(injected);
+        if (document.body.contains(injected)) document.body.removeChild(injected);
       }
     };
   }, [height]);
 
   return (
-    <div ref={containerRef} className={styles.embedWrapper} style={{ minHeight: height }} />
+    <div className={styles.xWrapper} style={{ minHeight: height }}>
+      {/* Skeleton shown while loading */}
+      {status === 'loading' && (
+        <div className={styles.skeleton} style={{ height }}>
+          <div className={styles.skeletonLine} style={{ width: '60%' }} />
+          <div className={styles.skeletonLine} style={{ width: '90%' }} />
+          <div className={styles.skeletonLine} style={{ width: '75%' }} />
+          <div className={styles.skeletonGap} />
+          <div className={styles.skeletonLine} style={{ width: '55%' }} />
+          <div className={styles.skeletonLine} style={{ width: '80%' }} />
+          <div className={styles.skeletonLine} style={{ width: '40%' }} />
+        </div>
+      )}
+      {/* Fallback if embed fails or account has restricted embeds */}
+      {status === 'failed' && (
+        <div className={styles.xFallback} style={{ height }}>
+          <svg width="32" height="32" viewBox="0 0 1200 1227" fill="currentColor" aria-hidden="true" className={styles.xFallbackIcon}>
+            <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z"/>
+          </svg>
+          <p className={styles.xFallbackText}>View our latest posts on X</p>
+          <a
+            href="https://x.com/nsibofficial"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.xFallbackLink}
+          >
+            Open @nsibofficial ↗
+          </a>
+        </div>
+      )}
+      {/* Actual embed container */}
+      <div
+        ref={containerRef}
+        className={styles.xEmbed}
+        style={{ display: status === 'loaded' ? 'block' : 'none' }}
+      />
+    </div>
   );
 }
 
@@ -131,12 +155,11 @@ export default function SocialFeedSection({ compact = false }: Props) {
 
   return (
     <section className={styles.section}>
-      {/* Dot-grid texture */}
       <div className={styles.dotGrid} aria-hidden="true" />
 
       <div className={`container ${styles.inner}`}>
 
-        {/* Header row */}
+        {/* Header */}
         <div className={styles.headerRow}>
           <div className={styles.headerLeft}>
             <span className={styles.overline}>Official Channels</span>
@@ -157,7 +180,10 @@ export default function SocialFeedSection({ compact = false }: Props) {
         <div className={styles.grid}>
 
           {/* Facebook card */}
-          <div className={styles.card} style={{ '--platform-color': '#1877F2', '--platform-glow': 'rgba(24,119,242,0.15)' } as React.CSSProperties}>
+          <div
+            className={styles.card}
+            style={{ '--platform-color': '#1877F2', '--platform-glow': 'rgba(24,119,242,0.18)' } as React.CSSProperties}
+          >
             <div className={styles.cardHeader}>
               <div className={styles.platformInfo}>
                 <div className={styles.platformIcon} style={{ background: '#1877F2' }}>
@@ -170,24 +196,23 @@ export default function SocialFeedSection({ compact = false }: Props) {
                   <span className={styles.platformHandle}>Nigerian Safety Investigation Bureau</span>
                 </div>
               </div>
-              <a
-                href="https://facebook.com/nsibofficial"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.followBtn}
-              >
+              <a href="https://facebook.com/nsibofficial" target="_blank" rel="noopener noreferrer" className={styles.followBtn}>
                 Follow ↗
               </a>
             </div>
-            <FacebookEmbed height={height} />
+            <div className={styles.cardBody}>
+              <FacebookEmbed height={height} />
+            </div>
           </div>
 
-          {/* X / Twitter card */}
-          <div className={styles.card} style={{ '--platform-color': '#0f0f0f', '--platform-glow': 'rgba(255,255,255,0.06)' } as React.CSSProperties}>
+          {/* X card */}
+          <div
+            className={styles.card}
+            style={{ '--platform-color': '#0f0f0f', '--platform-glow': 'rgba(255,255,255,0.06)' } as React.CSSProperties}
+          >
             <div className={styles.cardHeader}>
               <div className={styles.platformInfo}>
                 <div className={styles.platformIcon} style={{ background: '#0f0f0f' }}>
-                  {/* X logo */}
                   <svg width="14" height="14" viewBox="0 0 1200 1227" fill="white" aria-hidden="true">
                     <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z"/>
                   </svg>
@@ -197,16 +222,13 @@ export default function SocialFeedSection({ compact = false }: Props) {
                   <span className={styles.platformHandle}>@nsibofficial</span>
                 </div>
               </div>
-              <a
-                href="https://x.com/nsibofficial"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.followBtn}
-              >
+              <a href="https://x.com/nsibofficial" target="_blank" rel="noopener noreferrer" className={styles.followBtn}>
                 Follow ↗
               </a>
             </div>
-            <XTimelineEmbed height={height} />
+            <div className={styles.cardBody}>
+              <XTimelineEmbed height={height} />
+            </div>
           </div>
         </div>
 
