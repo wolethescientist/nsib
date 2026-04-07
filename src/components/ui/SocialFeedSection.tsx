@@ -29,7 +29,7 @@ function FacebookEmbed({ height }: { height: number }) {
     <div className={styles.fbWrapper}>
       <div className={styles.fbInner} style={{ height }}>
         <iframe
-          src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=500&height=${height}&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=false`}
+          src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=500&height=${height}&small_header=true&adapt_container_width=false&hide_cover=true&show_facepile=false`}
           width="500"
           height={height}
           style={{ border: 'none', overflow: 'hidden', display: 'block' }}
