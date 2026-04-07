@@ -107,6 +107,9 @@ export default function CalendarEventsSection({ events }: { events: CalendarEven
         .cal-scroll::-webkit-scrollbar { width: 4px; }
         .cal-scroll::-webkit-scrollbar-track { background: transparent; }
         .cal-scroll::-webkit-scrollbar-thumb { background: var(--nsib-gray-200); border-radius: 4px; }
+        @media (max-width: 900px) {
+          .cal-two-col { grid-template-columns: 1fr !important; }
+        }
       `}</style>
 
       <div className="container">
@@ -124,7 +127,7 @@ export default function CalendarEventsSection({ events }: { events: CalendarEven
         </div>
 
         {/* ── Two-column layout ── */}
-        <div style={{
+        <div className="cal-two-col" style={{
           display: "grid",
           gridTemplateColumns: "1fr 380px",
           gap: "2rem",

@@ -94,7 +94,7 @@ export default function ContactPage() {
         {/* Floating Grid Framework */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
           gap: '3rem',
           alignItems: 'flex-start',
           perspective: '1200px'

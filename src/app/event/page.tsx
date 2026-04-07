@@ -508,7 +508,7 @@ export default function EventsPage() {
             <p style={{ fontSize: "0.95rem" }}>Try adjusting your filters or search terms.</p>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.75rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))", gap: "1.75rem" }}>
             {filtered.map((event, i) => (
               <EventCard key={event.id} event={event} index={i} />
             ))}

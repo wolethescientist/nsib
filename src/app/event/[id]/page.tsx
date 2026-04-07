@@ -156,6 +156,9 @@ export default function EventDetailPage() {
         .reg-btn:hover { background: #C41A1A !important; }
         .back-btn:hover { background: rgba(255,255,255,0.18) !important; }
         .related-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1) !important; }
+        @media (max-width: 768px) {
+          .event-content-grid { grid-template-columns: 1fr !important; }
+        }
       `}} />
 
       {/* ── HERO ── */}
@@ -313,7 +316,7 @@ export default function EventDetailPage() {
 
       {/* ── CONTENT ── */}
       <div className="container" style={{ maxWidth: "900px", marginTop: "3rem" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "2rem", alignItems: "start" }}>
+        <div className="event-content-grid" style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "2rem", alignItems: "start" }}>
 
           {/* Left sidebar — date/time card */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>

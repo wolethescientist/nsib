@@ -200,7 +200,7 @@ export default function NewsPage() {
               <ScrollReveal>
                 <div style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 400px), 1fr))",
                   gap: "0",
                   background: "white",
                   borderRadius: "24px",
