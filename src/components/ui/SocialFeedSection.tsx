@@ -22,17 +22,28 @@ interface Props {
   compact?: boolean;
 }
 
-// Facebook Page Plugin caps at 500px internally regardless of iframe width.
-// We cap the wrapper at 500px and match its background to blend the gap.
+// Facebook Page Plugin always renders an internal page header (~85px).
+// There is no parameter to remove it. We clip it by pushing the iframe
+// up with a negative top margin and hiding overflow on the wrapper.
+const FB_HEADER_HEIGHT = 85;
+
 function FacebookEmbed({ height }: { height: number }) {
+  const iframeHeight = height + FB_HEADER_HEIGHT;
+
   return (
     <div className={styles.fbWrapper}>
+      {/* Clip wrapper: exact visible height, hides the internal FB header */}
       <div className={styles.fbInner} style={{ height }}>
         <iframe
-          src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=500&height=${height}&small_header=true&adapt_container_width=false&hide_cover=true&show_facepile=false`}
+          src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=500&height=${iframeHeight}&small_header=true&adapt_container_width=false&hide_cover=true&show_facepile=false`}
           width="500"
-          height={height}
-          style={{ border: 'none', overflow: 'hidden', display: 'block' }}
+          height={iframeHeight}
+          style={{
+            border: 'none',
+            overflow: 'hidden',
+            display: 'block',
+            marginTop: `-${FB_HEADER_HEIGHT}px`,
+          }}
           sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
           allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
           title="NSIB Facebook Page"
