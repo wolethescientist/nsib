@@ -15,7 +15,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git -C /c/Users/david/nsib-site diff 343592dcd2d2717aee7188c07cf74157b40a162d..5895586c15419092caf4515a57365cf8a53a1bf6 -- src/components/ui/SocialFeedSection.tsx)",
-      "Bash(node -e \"const r = require\\('/c/Users/david/nsib-site/node_modules/@types/react/index.d.ts'\\); console.log\\('ok'\\)\")"
+      "Bash(node -e \"const r = require\\('/c/Users/david/nsib-site/node_modules/@types/react/index.d.ts'\\); console.log\\('ok'\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=500&height=505&small_header=true&adapt_container_width=false&hide_cover=true&show_facepile=false\")",
+      "Bash(git checkout:*)"
     ]
   }
 }

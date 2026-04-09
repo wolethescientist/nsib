@@ -77,7 +77,9 @@
   margin: 0;
 }
 
-.headerRight { flex-shrink: 0; }
+.headerRight {
+  flex-shrink: 0;
+}
 
 .statBlock {
   display: flex;
@@ -258,8 +260,13 @@
 }
 
 @keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* ─── X fallback (when embed fails / account restricted) ─────── */
@@ -315,7 +322,10 @@
   white-space: nowrap;
 }
 
-.alsoOnLinks { display: flex; gap: 0.65rem; }
+.alsoOnLinks {
+  display: flex;
+  gap: 0.65rem;
+}
 
 .alsoOnLink {
   display: inline-flex;
@@ -339,17 +349,37 @@
 
 /* ─── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .headerRow { flex-direction: column; align-items: flex-start; }
-  .title { font-size: 2.2rem; }
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .title {
+    font-size: 2.2rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .section { padding: 5rem 0; }
-  .grid { grid-template-columns: 1fr; }
-  .section::after { font-size: 8rem; }
-  .title { font-size: 1.9rem; }
+  .section {
+    padding: 5rem 0;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section::after {
+    font-size: 8rem;
+  }
+
+  .title {
+    font-size: 1.9rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .alsoOn { flex-direction: column; align-items: flex-start; }
+  .alsoOn {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

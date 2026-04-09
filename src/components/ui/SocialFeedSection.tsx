@@ -17,7 +17,7 @@ declare global {
     };
   }
 }
-
+//fix
 interface Props {
   compact?: boolean;
 }
@@ -138,7 +138,7 @@ function XTimelineEmbed({ height }: { height: number }) {
       {status === 'failed' && (
         <div className={styles.xFallback} style={{ height }}>
           <svg width="32" height="32" viewBox="0 0 1200 1227" fill="currentColor" aria-hidden="true" className={styles.xFallbackIcon}>
-            <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z"/>
+            <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z" />
           </svg>
           <p className={styles.xFallbackText}>View our latest posts on X</p>
           <a
@@ -199,7 +199,7 @@ export default function SocialFeedSection({ compact = false }: Props) {
               <div className={styles.platformInfo}>
                 <div className={styles.platformIcon} style={{ background: '#1877F2' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="white" aria-hidden="true">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                   </svg>
                 </div>
                 <div>
@@ -225,7 +225,7 @@ export default function SocialFeedSection({ compact = false }: Props) {
               <div className={styles.platformInfo}>
                 <div className={styles.platformIcon} style={{ background: '#0f0f0f' }}>
                   <svg width="14" height="14" viewBox="0 0 1200 1227" fill="white" aria-hidden="true">
-                    <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z"/>
+                    <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z" />
                   </svg>
                 </div>
                 <div>
@@ -249,13 +249,13 @@ export default function SocialFeedSection({ compact = false }: Props) {
           <div className={styles.alsoOnLinks}>
             <Link href="https://instagram.com/nsibofficial" target="_blank" rel="noopener noreferrer" className={styles.alsoOnLink}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
               </svg>
               Instagram
             </Link>
             <Link href="https://linkedin.com/company/nsibofficial" target="_blank" rel="noopener noreferrer" className={styles.alsoOnLink}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" />
               </svg>
               LinkedIn
             </Link>
