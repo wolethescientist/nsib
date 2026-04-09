@@ -188,7 +188,7 @@ const HERO_IMAGES = [
   { src: "/images/nsib_building.jpg", alt: "NSIB Headquarters" },
   { src: "/images/trainstation.avif", alt: "Train Station" },
   { src: "/images/new_maritime.jpg", alt: "Maritime Operations" },
-  { src: "/images/aeroplane.webp", alt: "Aviation" },
+  { src: "/images/airplane.webp", alt: "Aviation" },
 ];
 
 export default function Home() {
