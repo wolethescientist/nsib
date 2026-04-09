@@ -1,393 +1,304 @@
 "use client";
 
-import React, { useState } from 'react';
-import ScrollReveal from '@/components/ui/ScrollReveal';
-import Link from 'next/link';
+import { useState, useMemo, useRef } from "react";
+import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 
-// SVGs
+// ─── Shared Components ──────────────────────────────────────────────────────
+
 const DownloadIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+  </svg>
 );
 
 const SearchIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </svg>
 );
 
-const mous = [
-  {
-    id: 1,
-    title: "NSIB & Nigerian Civil Aviation Authority (NCAA)",
-    partner: "NCAA",
-    date: "2023",
-    description: "Bilateral agreement establishing mutual support, data sharing, and procedural frameworks for comprehensive aviation accident investigations.",
-    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: 2,
-    title: "NSIB & Nigerian Maritime Administration (NIMASA)",
-    partner: "NIMASA",
-    date: "2024",
-    description: "Memorandum of Understanding outlining clear jurisdictional responsibilities and coordinated response tactics for marine emergencies.",
-    image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: 3,
-    title: "Bilateral Agreement: NSIB & US NTSB",
-    partner: "US NTSB",
-    date: "2022",
-    description: "International cooperation treaty ensuring shared training, intelligence, and technical assistance between Nigeria and the United States.",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: 4,
-    title: "NSIB & Nigerian Railway Corporation (NRC)",
-    partner: "NRC",
-    date: "2023",
-    description: "Framework agreement designed to enhance safety protocols, operational boundaries, and rapid response units for railway accidents.",
-    image: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: 5,
-    title: "NSIB & Federal Road Safety Corps (FRSC)",
-    partner: "FRSC",
-    date: "2023",
-    description: "Inter-agency cooperative agreement focusing on the investigation of severe road accidents involving mass transit and hazardous materials.",
-    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=800&auto=format&fit=crop"
-  }
+const ChevronIcon = ({ dir }: { dir: "left" | "right" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    {dir === "left" ? <polyline points="15 18 9 12 15 6" /> : <polyline points="9 18 15 12 9 6" />}
+  </svg>
+);
+
+const StatusBadge = ({ status }: { status: string }) => {
+  const map: Record<string, { bg: string; text: string }> = {
+    "Active": { bg: "#1B2A6B", text: "#fff" },
+    "Renewed": { bg: "#2d6a4f", text: "#fff" },
+    "Expired": { bg: "#E23030", text: "#fff" },
+  };
+  const c = map[status] ?? { bg: "#64748B", text: "#fff" };
+  return (
+    <span style={{
+      display: "inline-block", padding: "0.2rem 0.65rem", borderRadius: "10px",
+      fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase",
+      letterSpacing: "0.05em", backgroundColor: c.bg, color: c.text, whiteSpace: "nowrap",
+    }}>{status}</span>
+  );
+};
+
+const ScopeBadge = ({ scope }: { scope: string }) => {
+  const map: Record<string, string> = {
+    "Aviation": "#1B2A6B", "Maritime": "#0077B6", "Railway": "#6A0572",
+    "Multimodal": "#2d6a4f", "International": "#D97706", "Academic": "#64748B"
+  };
+  return (
+    <span style={{
+      display: "inline-block", padding: "0.2rem 0.55rem", borderRadius: "10px",
+      fontSize: "0.66rem", fontWeight: 700, textTransform: "uppercase",
+      letterSpacing: "0.05em", backgroundColor: map[scope] ?? "#64748B", color: "#fff", whiteSpace: "nowrap",
+    }}>{scope}</span>
+  );
+};
+
+const DownloadBtn = () => (
+  <button onClick={(e) => { e.stopPropagation(); }} style={{
+    display: "inline-flex", alignItems: "center", gap: "0.35rem",
+    padding: "0.35rem 0.8rem", backgroundColor: "#E23030", color: "white",
+    border: "none", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700,
+    cursor: "pointer", transition: "all 0.18s ease", whiteSpace: "nowrap",
+  }}
+    onMouseEnter={e => { e.currentTarget.style.backgroundColor = "#B92424"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+    onMouseLeave={e => { e.currentTarget.style.backgroundColor = "#E23030"; e.currentTarget.style.transform = "none"; }}
+  ><DownloadIcon />PDF</button>
+);
+
+const TabNav = ({ active }: { active: string }) => {
+  const tabs = [
+    { id: "all", label: "All Publications", href: "/publications" },
+    { id: "aircraft", label: "Aircraft Reports", href: "/air-reports" },
+    { id: "maritime", label: "Maritime Reports", href: "/marine-reports" },
+    { id: "rail", label: "Rail Reports", href: "/rail-reports" },
+  ] as const;
+  return (
+    <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0", marginBottom: "2rem", overflowX: "auto", gap: 0 }}>
+      {tabs.map(tab => {
+        const isActive = tab.id === active;
+        return (
+          <Link key={tab.id} href={tab.href} style={{
+            padding: "0.85rem 1.5rem", fontSize: "0.9rem", fontWeight: isActive ? 700 : 600,
+            color: isActive ? "#E23030" : "#3A3A3A",
+            borderBottom: isActive ? "2px solid #E23030" : "2px solid transparent",
+            marginBottom: "-2px", whiteSpace: "nowrap", transition: "color 0.2s", textDecoration: "none",
+          }}
+            onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = "#1B2A6B"; }}
+            onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = "#3A3A3A"; }}
+          >{tab.label}</Link>
+        );
+      })}
+    </div>
+  );
+};
+
+const TH = ({ children, width }: { children: React.ReactNode; width?: string }) => (
+  <th style={{
+    padding: "0.85rem 1rem", fontSize: "0.72rem", fontWeight: 700,
+    textTransform: "uppercase", letterSpacing: "0.06em", color: "rgba(255,255,255,0.95)",
+    borderBottom: "2px solid rgba(255,255,255,0.15)", textAlign: "left",
+    whiteSpace: "nowrap", width: width || "auto",
+  }}>{children}</th>
+);
+
+const TD = ({ children, muted }: { children: React.ReactNode; muted?: boolean }) => (
+  <td style={{
+    padding: "0.9rem 1rem", fontSize: "0.855rem",
+    color: muted ? "#6A6B70" : "#1E293B",
+    borderBottom: "1px solid #F1F5F9", verticalAlign: "middle",
+  }}>{children}</td>
+);
+
+// ─── Data ───────────────────────────────────────────────────────────────────
+
+type MoURecord = {
+  sn: number;
+  dateSigned: string;
+  partner: string;
+  title: string;
+  scope: string;
+  status: string;
+};
+
+const mouRecords: MoURecord[] = [
+  { sn: 1, dateSigned: "2026-03-10", partner: "Nigerian Navy", title: "MoU on Maritime Search, Rescue, and Investigation Support", scope: "Maritime", status: "Active" },
+  { sn: 2, dateSigned: "2026-02-15", partner: "Federal Fire Service", title: "MoU on First Responder Coordination and Fire Incident Probes", scope: "Multimodal", status: "Active" },
+  { sn: 3, dateSigned: "2025-11-22", partner: "NCAA", title: "MoU on Aviation Data Exchange and Regulatory Synergy", scope: "Aviation", status: "Active" },
+  { sn: 4, dateSigned: "2025-10-05", partner: "NAMA", title: "MoU on Air Traffic Control Data and Radar Information Sharing", scope: "Aviation", status: "Active" },
+  { sn: 5, dateSigned: "2025-08-30", partner: "NIMASA", title: "MoU on Marine Accident Investigation and Incident Reporting", scope: "Maritime", status: "Active" },
+  { sn: 6, dateSigned: "2025-06-14", partner: "Nigerian Railway Corp (NRC)", title: "MoU on Railway Safety Protocols and Accident Site Access", scope: "Railway", status: "Active" },
+  { sn: 7, dateSigned: "2025-04-10", partner: "NEMA", title: "MoU on Emergency Management and Disaster Response Integration", scope: "Multimodal", status: "Active" },
+  { sn: 8, dateSigned: "2025-02-28", partner: "Univ. of Lagos (UNILAG)", title: "MoU on Academic Research and Safety Engineering Development", scope: "Academic", status: "Active" },
+  { sn: 9, dateSigned: "2024-11-15", partner: "US NTSB", title: "MoU on Technical Assistance and Investigator Exchange Program", scope: "International", status: "Active" },
+  { sn: 10, dateSigned: "2024-09-02", partner: "UK AAIB", title: "MoU on Bilateral Cooperation in Aircraft Accident Investigation", scope: "International", status: "Renewed" },
+  { sn: 11, dateSigned: "2024-07-20", partner: "NiMet", title: "MoU on Meteorological Data Sharing for Transport Safety", scope: "Multimodal", status: "Active" },
+  { sn: 12, dateSigned: "2024-05-18", partner: "Nigerian Defense Academy", title: "MoU on Strategic Safety Leadership and Crisis Management", scope: "Academic", status: "Active" },
+  { sn: 13, dateSigned: "2024-03-05", partner: "Aero Contractors", title: "MoU on Joint Facility Usage for Technical Tear-down Analysis", scope: "Aviation", status: "Active" },
+  { sn: 14, dateSigned: "2023-11-11", partner: "Lagos State Waterways Auth", title: "MoU on Inland Waterways Safety and Incident Investigation", scope: "Maritime", status: "Active" },
+  { sn: 15, dateSigned: "2023-09-24", partner: "FRSC", title: "MoU on Road Traffic Crash Data Sharing and Joint Probes", scope: "Multimodal", status: "Active" },
+  { sn: 16, dateSigned: "2023-08-10", partner: "Singapore TSIB", title: "MoU on Safety Investigation Methodologies and Best Practices", scope: "International", status: "Active" },
+  { sn: 17, dateSigned: "2023-06-15", partner: "Nigerian Police Force", title: "MoU on Crime Scene Preservation and Evidence Handling", scope: "Multimodal", status: "Active" },
+  { sn: 18, dateSigned: "2022-12-05", partner: "Banjul Accord Group (BAGAIA)", title: "MoU on Regional Aviation Safety Support and Resource Pooling", scope: "International", status: "Renewed" },
+  { sn: 19, dateSigned: "2021-10-22", partner: "Cranfield University", title: "MoU on Advanced Investigator Training and Certification", scope: "Academic", status: "Expired" },
+  { sn: 20, dateSigned: "2020-04-18", partner: "FAAN", title: "MoU on Airport Infrastructure Safety and Emergency Drills", scope: "Aviation", status: "Expired" },
 ];
 
-export default function MOUsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+const ITEMS_PER_PAGE = 20;
+const YEARS = ["2026", "2025", "2024", "2023", "2022", "2021", "2020"];
 
-  const filteredMous = mous.filter(mou => 
-    mou.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    mou.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    mou.partner.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+
+// ─── Page ───────────────────────────────────────────────────────────────────
+
+export default function MoUPage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const opacityFade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  const [search, setSearch] = useState("");
+  const [yearFilter, setYearFilter] = useState("");
+  const [page, setPage] = useState(1);
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase();
+    return mouRecords
+      .filter(r => {
+        const matchSearch = !q ||
+          r.title.toLowerCase().includes(q) ||
+          r.partner.toLowerCase().includes(q) ||
+          r.scope.toLowerCase().includes(q);
+        const matchYear = !yearFilter || r.dateSigned.startsWith(yearFilter);
+        return matchSearch && matchYear;
+      })
+      .sort((a, b) => new Date(b.dateSigned).getTime() - new Date(a.dateSigned).getTime());
+  }, [search, yearFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  const paged = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  const handleSearch = (v: string) => { setSearch(v); setPage(1); };
+  const handleYear = (v: string) => { setYearFilter(v); setPage(1); };
 
   return (
-    <main style={{ 
-      backgroundColor: '#f8fafc', 
-      minHeight: '100vh', 
-      paddingBottom: '8rem',
-      overflowX: 'hidden',
-      perspective: '1000px'
-    }}>
-      {/* Antigravity Hero Section */}
-      <section style={{ 
-        backgroundColor: 'var(--nsib-navy)', 
-        color: 'white', 
-        padding: '8rem 2rem 6rem',
-        position: 'relative',
-        transformStyle: 'preserve-3d'
+    <main style={{ paddingBottom: "8rem", backgroundColor: "var(--bg-primary)", overflowX: "hidden" }}>
+      {/* ── Hero ── */}
+      <section ref={containerRef} style={{
+        backgroundColor: "var(--nsib-navy)", color: "white",
+        padding: "12rem 2rem 10rem", position: "relative",
+        overflow: "hidden", marginBottom: "4rem", perspective: "1000px",
       }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: 'radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 40%), radial-gradient(circle at bottom left, rgba(226, 48, 48, 0.15) 0%, transparent 50%)',
-          zIndex: 0
-        }} />
-        
-        {/* Floating background elements */}
-        <div className="floating-element" style={{ position: 'absolute', top: '10%', right: '10%', width: '150px', height: '150px', borderRadius: '20px', background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.05)', transform: 'rotateZ(15deg)', zIndex: 1 }} />
-        <div className="floating-element-slow" style={{ position: 'absolute', bottom: '-10%', left: '5%', width: '250px', height: '250px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(226,48,48,0.2) 0%, rgba(226,48,48,0) 100%)', backdropFilter: 'blur(20px)', zIndex: 1 }} />
-        
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <ScrollReveal>
-            <Link href="/publications" style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              fontSize: "0.85rem",
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.7)",
-              marginBottom: "2rem",
-              transition: "color 0.2s ease",
-              textDecoration: "none"
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.color = "white"}
-            onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}
-            >
-              <span>←</span>
-              <span>Back to News & Pubs</span>
-            </Link>
-            <br />
-            <div style={{
-              display: 'inline-block',
-              padding: '0.5rem 1rem',
-              backgroundColor: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              borderRadius: '30px',
-              backdropFilter: 'blur(10px)',
-              marginBottom: '1.5rem',
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase'
-            }}>
-              Partnerships & Agreements
-            </div>
-            <h1 style={{ 
-              color: 'white', 
-              fontSize: 'clamp(3rem, 5vw, 4.5rem)', 
-              fontWeight: 800,
-              lineHeight: 1.1,
-              marginBottom: '1.5rem',
-              textShadow: '0 10px 30px rgba(0,0,0,0.3)'
-            }}>
-              Memoranda of <br /> Understanding (MOU)
-            </h1>
-            <p style={{ 
-              fontSize: '1.25rem', 
-              color: 'rgba(255, 255, 255, 0.8)', 
-              maxWidth: '650px', 
-              lineHeight: 1.6,
-              marginBottom: '2.5rem',
-              textShadow: '0 5px 15px rgba(0,0,0,0.2)'
-            }}>
-              Explore our bilateral and multilateral agreements with domestic agencies and international partners to ensure comprehensive and coordinated transport safety investigations.
-            </p>
-
-            {/* Integrated Hero Search */}
-            <div style={{ position: 'relative', width: '100%', maxWidth: '500px' }}>
-              <div style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: '1.5rem', color: 'rgba(255,255,255,0.6)' }}>
-                <SearchIcon />
-              </div>
-              <input 
-                type="text" 
-                className="hero-search-input"
-                placeholder="Search by agency, title, or keywords..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '1.1rem 1.5rem 1.1rem 3.5rem',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  outline: 'none',
-                  fontSize: '1.05rem',
-                  color: 'white',
-                  fontFamily: 'inherit',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(30px)',
-                  WebkitBackdropFilter: 'blur(30px)',
-                  transition: 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = 'rgba(255,255,255,0.4)';
-                  e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-                  e.target.style.transform = 'translateY(-4px)';
-                  e.target.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.3), 0 0 0 4px rgba(255, 255, 255, 0.05)';
-                  const icon = e.target.previousElementSibling as HTMLElement;
-                  if (icon) icon.style.color = 'white';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-                  e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.2)';
-                  const icon = e.target.previousElementSibling as HTMLElement;
-                  if (icon) icon.style.color = 'rgba(255,255,255,0.6)';
-                }}
-              />
-            </div>
-          </ScrollReveal>
-        </div>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at top right, rgba(0, 168, 255, 0.2) 0%, transparent 40%), radial-gradient(circle at bottom center, rgba(255, 255, 255, 0.1) 0%, transparent 60%)", zIndex: 0 }} />
+        <motion.div style={{ position: "absolute", top: "15%", right: "10%", width: "180px", height: "180px", borderRadius: "24px", background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 30px 60px rgba(0,0,0,0.1)", zIndex: 1, y: y1 }}
+          animate={{ rotateZ: [15, 20, 15], y: [0, -20, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
+        <motion.div style={{ position: "absolute", bottom: "5%", left: "8%", width: "300px", height: "300px", borderRadius: "50%", background: "linear-gradient(135deg, rgba(0,168,255,0.08) 0%, rgba(0,168,255,0) 100%)", backdropFilter: "blur(24px)", zIndex: 1, y: y2 }}
+          animate={{ scale: [1, 1.05, 1], y: [0, -15, 0] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }} />
+        <motion.div className="container" style={{ position: "relative", zIndex: 2, opacity: opacityFade }}
+          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+          <div style={{ maxWidth: "800px" }}>
+            <motion.h1 initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+              style={{ color: "white", fontSize: "clamp(3.5rem, 6vw, 4.5rem)", fontWeight: 800, lineHeight: 1.1, marginBottom: "1.5rem", textShadow: "0 20px 40px rgba(0,0,0,0.4)", letterSpacing: "-0.02em" }}>
+              Memoranda of<br />Understanding
+            </motion.h1>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.4 }}
+              style={{ fontSize: "1.2rem", color: "rgba(255,255,255,0.85)", maxWidth: "600px", lineHeight: 1.7, textShadow: "0 10px 20px rgba(0,0,0,0.2)" }}>
+              Access formalized agreements and partnerships between the NSIB and allied domestic and international organizations.
+            </motion.p>
+          </div>
+        </motion.div>
       </section>
 
-      {/* Main Content Area */}
-      <div className="container" style={{ marginTop: '-4rem', position: 'relative', zIndex: 10 }}>
+      {/* ── Content ── */}
+      <div className="container" style={{ maxWidth: "1400px" }}>
+        <TabNav active="mou" />
 
-        {/* Antigravity Cards Grid */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))', 
-          gap: '3rem 2rem' 
-        }}>
-          {filteredMous.length > 0 ? (
-            filteredMous.map((item, index) => (
-              <ScrollReveal key={item.id} delay={0.1 * (index % 3)}>
-                <div 
-                  className="mou-card"
-                  style={{ 
-                    position: 'relative',
-                    background: 'white',
-                    borderRadius: '24px',
-                    overflow: 'hidden',
-                    display: 'flex', 
-                    flexDirection: 'column',
-                    height: '100%',
-                    transformStyle: 'preserve-3d',
-                    transition: 'all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.05)',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-12px) scale(1.02)';
-                    e.currentTarget.style.boxShadow = '0 30px 60px rgba(27, 42, 107, 0.15)';
-                    const img = e.currentTarget.querySelector('.card-img') as HTMLElement;
-                    if (img) img.style.transform = 'scale(1.1)';
-                    const btn = e.currentTarget.querySelector('.dl-btn') as HTMLElement;
-                    if (btn) {
-                        btn.style.backgroundColor = 'var(--nsib-navy)';
-                        btn.style.color = 'white';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.05)';
-                    const img = e.currentTarget.querySelector('.card-img') as HTMLElement;
-                    if (img) img.style.transform = 'scale(1)';
-                    const btn = e.currentTarget.querySelector('.dl-btn') as HTMLElement;
-                    if (btn) {
-                        btn.style.backgroundColor = 'rgba(27, 42, 107, 0.05)';
-                        btn.style.color = 'var(--nsib-navy)';
-                    }
-                  }}
-                >
-                  {/* Image Header */}
-                  <div style={{ position: 'relative', height: '220px', overflow: 'hidden' }}>
-                    <div 
-                      className="card-img"
-                      style={{ 
-                        position: 'absolute',
-                        top: 0, left: 0, right: 0, bottom: 0,
-                        backgroundImage: `url(${item.image})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        transition: 'transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1)'
-                      }} 
-                    />
-                    {/* Gradient Overlay */}
-                    <div style={{ 
-                      position: 'absolute',
-                      top: 0, left: 0, right: 0, bottom: 0,
-                      background: 'linear-gradient(to bottom, rgba(27, 42, 107, 0.1) 0%, rgba(27, 42, 107, 0.8) 100%)'
-                    }} />
-                    
-                    {/* Partner Badge */}
-                    <div style={{ 
-                      position: 'absolute', 
-                      bottom: '1.25rem', 
-                      left: '1.25rem',
-                      color: 'white',
-                      textShadow: '0 2px 4px rgba(0,0,0,0.5)'
-                    }}>
-                        <span style={{ fontSize: '1.2rem', fontWeight: 800 }}>Partner: {item.partner}</span>
-                    </div>
-                    
-                    {/* Year Badge at Top Right */}
-                    <div style={{ 
-                      position: 'absolute', 
-                      top: '1.25rem', 
-                      right: '1.25rem',
-                      background: 'rgba(255,255,255,0.2)',
-                      backdropFilter: 'blur(8px)',
-                      color: 'white',
-                      padding: '0.4rem 1rem',
-                      borderRadius: '20px',
-                      fontSize: '0.85rem',
-                      fontWeight: 700,
-                      boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
-                    }}>
-                      {item.date}
-                    </div>
-                  </div>
+        {/* Toolbar */}
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ position: "relative", flex: "1 1 260px", maxWidth: "380px" }}>
+            <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", left: "0.9rem", color: "#94A3B8", pointerEvents: "none" }}><SearchIcon /></div>
+            <input type="text" placeholder="Search by title, partner, scope…"
+              value={search} onChange={e => handleSearch(e.target.value)}
+              style={{ width: "100%", padding: "0.7rem 1rem 0.7rem 2.6rem", border: "1.5px solid #E2E8F0", borderRadius: "8px", fontSize: "0.875rem", color: "#1E293B", backgroundColor: "white", outline: "none", transition: "border-color 0.2s" }}
+              onFocus={e => e.target.style.borderColor = "#1B2A6B"} onBlur={e => e.target.style.borderColor = "#E2E8F0"} />
+          </div>
+          <select value={yearFilter} onChange={e => handleYear(e.target.value)}
+            style={{ padding: "0.7rem 1rem", border: "1.5px solid #E2E8F0", borderRadius: "8px", fontSize: "0.875rem", color: "#1E293B", backgroundColor: "white", cursor: "pointer", outline: "none" }}>
+            <option value="">All Years</option>
+            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+          </select>
+          <div style={{ marginLeft: "auto", fontSize: "0.85rem", color: "#64748B", whiteSpace: "nowrap" }}>
+            Showing <strong style={{ color: "#1B2A6B" }}>{paged.length}</strong> of <strong style={{ color: "#1B2A6B" }}>{filtered.length}</strong> records
+          </div>
+        </div>
 
-                  {/* Card Content body */}
-                  <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flexGrow: 1, backgroundColor: 'white' }}>
-                    <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--nsib-navy)', lineHeight: 1.4, fontWeight: 700 }}>
-                      {item.title}
-                    </h3>
-                    
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2rem', flexGrow: 1 }}>
-                      {item.description}
-                    </p>
-                    
-                    {/* Action Section */}
-                    <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'space-between',
-                        marginTop: 'auto', 
-                        borderTop: '1px solid rgba(0,0,0,0.05)', 
-                        paddingTop: '1.5rem' 
-                    }}>
-                        <span style={{ color: 'var(--nsib-slate)', fontSize: '0.85rem', fontWeight: 600 }}>
-                            View Agreement
-                        </span>
-                        
-                        <button className="dl-btn" style={{ 
-                            display: 'flex', 
-                            alignItems: 'center',
-                            justifyContent: 'center', 
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            backgroundColor: 'rgba(27, 42, 107, 0.05)',
-                            color: 'var(--nsib-navy)', 
-                            transition: 'all 0.3s',
-                            border: 'none',
-                            cursor: 'pointer'
-                        }}>
-                            <DownloadIcon />
-                        </button>
-                    </div>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))
-          ) : (
-            <div style={{ 
-              gridColumn: '1 / -1', 
-              textAlign: 'center', 
-              padding: '6rem 2rem', 
-              backgroundColor: 'rgba(255,255,255,0.5)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: '24px',
-              border: '1px dashed var(--border-subtle)'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-                <SearchIcon />
+        {/* Table */}
+        <div style={{ backgroundColor: "white", borderRadius: "12px", border: "1px solid #E2E8F0", overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "1000px" }}>
+              <thead>
+                <tr style={{ backgroundColor: "#1B2A6B" }}>
+                  <TH width="52px">S/N</TH>
+                  <TH width="110px">Date Signed</TH>
+                  <TH width="200px">Partner</TH>
+                  <TH>Agreement Title</TH>
+                  <TH width="130px">Scope</TH>
+                  <TH width="100px">Status</TH>
+                  <TH width="80px">Download</TH>
+                </tr>
+              </thead>
+              <tbody>
+                {paged.length > 0 ? paged.map((r, idx) => {
+                  const rowBg = idx % 2 === 0 ? "white" : "#F8FAFC";
+                  return (
+                    <tr key={r.sn} style={{ backgroundColor: rowBg, transition: "background 0.15s", cursor: "default" }}
+                      onMouseEnter={e => (e.currentTarget.style.backgroundColor = "#EEF2FF")}
+                      onMouseLeave={e => (e.currentTarget.style.backgroundColor = rowBg)}>
+                      <TD muted>{(page - 1) * ITEMS_PER_PAGE + idx + 1}</TD>
+                      <TD muted>{formatDate(r.dateSigned)}</TD>
+                      <TD><span style={{ fontWeight: 600, color: "#1E293B" }}>{r.partner}</span></TD>
+                      <TD>{r.title}</TD>
+                      <TD><ScopeBadge scope={r.scope} /></TD>
+                      <TD><StatusBadge status={r.status} /></TD>
+                      <td style={{ padding: "0.9rem 1rem", verticalAlign: "middle", borderBottom: "1px solid #F1F5F9" }}><DownloadBtn /></td>
+                    </tr>
+                  );
+                }) : (
+                  <tr><td colSpan={7} style={{ padding: "4rem 2rem", textAlign: "center", color: "#94A3B8" }}><div style={{ fontSize: "0.95rem" }}>No records match your search criteria.</div></td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          {totalPages > 1 && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1rem 1.5rem", borderTop: "1px solid #F1F5F9", backgroundColor: "white", flexWrap: "wrap", gap: "1rem" }}>
+              <span style={{ fontSize: "0.85rem", color: "#64748B" }}>Page {page} of {totalPages}</span>
+              <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", borderRadius: "8px", border: "1.5px solid #E2E8F0", backgroundColor: "white", cursor: page === 1 ? "not-allowed" : "pointer", opacity: page === 1 ? 0.4 : 1, transition: "all 0.15s", color: "#1B2A6B" }}><ChevronIcon dir="left" /></button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
+                  <button key={n} onClick={() => setPage(n)} style={{ width: "36px", height: "36px", borderRadius: "8px", border: n === page ? "1.5px solid #1B2A6B" : "1.5px solid #E2E8F0", backgroundColor: n === page ? "#1B2A6B" : "white", color: n === page ? "white" : "#1B2A6B", fontSize: "0.85rem", fontWeight: n === page ? 700 : 500, cursor: "pointer", transition: "all 0.15s" }}>{n}</button>
+                ))}
+                <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", borderRadius: "8px", border: "1.5px solid #E2E8F0", backgroundColor: "white", cursor: page === totalPages ? "not-allowed" : "pointer", opacity: page === totalPages ? 0.4 : 1, transition: "all 0.15s", color: "#1B2A6B" }}><ChevronIcon dir="right" /></button>
               </div>
-              <h3 style={{ marginBottom: '0.75rem', fontSize: '1.5rem' }}>No MOUs found</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Try adjusting your search query.</p>
             </div>
           )}
         </div>
-      </div>
-      
-      {/* CSS Animations & Reset for scrollbar */}
-      <style dangerouslySetInnerHTML={{__html: `
-        ::-webkit-scrollbar { display: none; }
-        
-        .hero-search-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
 
-        @keyframes float {
-            0% { transform: translateY(0px) rotateZ(15deg); }
-            50% { transform: translateY(-20px) rotateZ(10deg); }
-            100% { transform: translateY(0px) rotateZ(15deg); }
-        }
-        @keyframes floatSlow {
-            0% { transform: translateY(0px) rotateZ(0deg) scale(1); }
-            50% { transform: translateY(-15px) rotateZ(5deg) scale(1.05); }
-            100% { transform: translateY(0px) rotateZ(0deg) scale(1); }
-        }
-        .floating-element {
-            animation: float 8s ease-in-out infinite;
-        }
-        .floating-element-slow {
-            animation: floatSlow 12s ease-in-out infinite;
-        }
-      `}} />
+        {/* Legend */}
+        <div style={{ display: "flex", gap: "1.5rem", marginTop: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
+          <span style={{ fontSize: "0.8rem", color: "#94A3B8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Status:</span>
+          {["Active", "Renewed", "Expired"].map((label) => {
+            const m = { "Active": "#1B2A6B", "Renewed": "#2d6a4f", "Expired": "#E23030" } as any;
+            return (
+              <div key={label} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                <span style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: m[label], display: "inline-block" }} />
+                <span style={{ fontSize: "0.8rem", color: "#64748B" }}>{label}</span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
     </main>
   );
 }
