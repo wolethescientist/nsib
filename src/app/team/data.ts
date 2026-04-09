@@ -91,6 +91,53 @@ export const teamMembers: TeamMember[] = [
       "He is a distinguished member of various professional bodies locally and internationally, including the Nigerian Society of Engineers (NSE), Council for the Regulation of Engineering in Nigeria (COREN), International Society of Air Safety Investigators (ISASI), Royal Aeronautical Society (RAeS) and International Recorder Investigator Group (IRIG).",
     ],
   },
+  {
+    slug: "muonemeh-ndubuisi-lotenna",
+    name: "Muonemeh Ndubuisi Lotenna, MBA, FCIB",
+    title: "Director, Finance & Accounts",
+    image: "/images/team/Muonemeh Ndubuisi Lotenna.jpeg",
+    bio: [
+      "Muonemeh Ndubuisi Lotenna is a seasoned finance and banking executive with over two decades of progressive leadership experience spanning commercial banking, strategic business transformation, and public sector financial management.",
+      "He currently serves with the Nigerian Safety Investigation Bureau (NSIB) following his impactful tenure as Director of Finance and Accounts at the Nigerian Airspace Management Agency (NAMA), where he led financial strategy, fiscal governance, and institutional accountability at the highest level. In these roles, he has been instrumental in strengthening financial controls, optimizing balance sheet management, enhancing revenue frameworks, and driving transparency within Nigeria's aviation and safety ecosystem.",
+      "Before transitioning into public service, Mr. Lotenna built an exceptional career at Access Bank Plc, where he rose from Executive Trainee to Senior Manager and Zonal Head of the Commercial Banking Division (South-South/South-East). He successfully managed regional balance sheets, drove double-digit quarterly growth in revenue and assets, chaired and presented credits to management and board credit committees, and played a pivotal role in strategic risk and asset-liability management discussions.",
+      "He also served as Head of Business Development at Access Bank Zambia Ltd, where he led a comprehensive transformation of the bank's Strategic Business Units, repositioning the institution from 18th to a top 10 ranking nationally. His leadership spanned commercial, corporate, personal, and business banking divisions, overseeing profitability, credit governance, product development, and executive-level reporting.",
+      "Academically, Mr. Lotenna holds a Chartered Banker MBA from Bangor University, United Kingdom, and an MSc in Finance, Management and Accounting from University of Bradford. He is a Fellow of the Chartered Banker Institute (UK), an Associate of the Chartered Institute of Bankers of Nigeria, and a member of several professional finance and risk management bodies.",
+      "He has completed executive leadership programs at globally renowned institutions including Harvard Business School, Wharton Executive Education, and the National University of Singapore Business School.",
+      "Recognized for his strategic thinking, disciplined financial stewardship, credit expertise, and people-centered leadership style, Mr. Lotenna combines private-sector performance excellence with public-sector accountability. His work is driven by integrity, institutional strengthening, and sustainable growth.",
+    ],
+  },
+  {
+    slug: "funke-adebayo-arowojobe",
+    name: "Funke Adebayo-Arowojobe FSM, FNIM, ACIN, MCIPuRS, MCArb",
+    title: "Director, Public Affairs & Family Assistance",
+    image: "/images/team/FUNKE ADEBAYO- AROWOJOBE  FSM, FNIM, ACIN, MCIPuRS, MCArb.jpeg",
+    bio: [
+      "Funke Adebayo-Arowojobe is a Chartered Insurance and Risk Management Professional with a career spanning two and a half decades in the field. She held several managerial positions in various companies within the Insurance Industry like NEM Insurance Plc, Mutual Benefits Assurance Plc, Law Union and Rock Insurance Plc, Old Mutual West Africa and Standard Alliance Insurance Plc.",
+      "After leaving the mainstream, she became the Principal Consultant and Director of Dutee Insurance Brokers and Risk Consultants Limited, a company registered in Nigeria to provide professional and technical risk and insurance management consultancy services to different sectors of the economy, a position she held until her appointment to the public service as the Director Public Affairs and Consumer Protection of The Nigerian Meteorological Agency, also under the Federal Ministry of Aviation and Aerospace Development.",
+      "A few years later, she was redeployed to the Nigerian Safety Investigation Bureau (NSIB) as the Director, Public Affairs and Family Assistance where she oversees the Public Affairs, Family Assistance and SERVICOM units and is responsible for most external relations engagements.",
+      "Her core strengths include Strategy development and Implementation, Risk advisory, Insurance portfolio management, Brand marketing and Sales operations, Strategic Business Communications, Retail business management, Business development, Customer strategy and Corporate assurance. Using her versatile skills and inclusive leadership style, she has had a proven track record in effective business administration and sales transformation, all through her career.",
+      "A specialist in business turnaround and sustainability, she has served in advisory capacity and/or as a consultant to a number of organisations in the Insurance, Agricultural, Oil and gas, Transport and SME (small business) spaces in the private sector and government organisations alike. Most recently, she was the consultant on risk and insurance management to AMNI International Petroleum oil and gas Company Ltd where she and her team were solely responsible for overseeing the corporate risk management programme of the company, played a major advisory role on compliance and interacted as a liaison between the organisation and NNPC/NAPPIMS on the joint venture oil and gas asset.",
+      "She is the immediate past National Vice President (Chapters) of the Women In Energy Oil and Gas (WEOG), a member of the Professional Insurance Ladies Association (PILA), a member of the African Insurance Women's Association (AIWA), a Member of Women In Business (WIMBIZ), The Nigerian Council of Registered Insurance Brokers (NCRIB) and a host of other Professional bodies.",
+      "She is a Fellow of The Nigerian Institute of Management, a Fellow of the Institute of Strategic Management of Nigeria (Chartered), an Associate Member of the Chartered Insurance Institute of Nigeria, a Member of the Chartered Institute of Insurance UK, a Member of the Chartered Institute of Risk Management Nigeria, a Member of the Chartered Institute of Purchasing and Supply Administrators of Nigeria, Member Chartered Institute of Arbitrators Nigeria and Member Chartered Institute of Directors.",
+      "She has an MBA from the Ambrose Alli University Ekpoma, a PGD from the West African Insurance Institute the Gambia, a BSc degree in Sociology from the University of Ibadan Nigeria, and is currently studying an MSc in Risk Management at the University of Buckingham United Kingdom. She has undergone several trainings locally and abroad, including the Lagos Business School EDC CEM 52, the National Institute of Policy Planning and Strategic Studies SLEAPM 8, and is an alumnus of the prestigious Harvard Business School, and Oxford Saïd Business School.",
+      "Fondly called Mrs A. by most of her colleagues and friends, she enjoys meeting people, travelling, cooking, reading, fitness, yoga and golf.",
+    ],
+  },
+  {
+    slug: "henry-airiohuodion",
+    name: "Mr. Henry Omonzojie Airiohuodion",
+    title: "Director, Corporate Services",
+    image: "/images/team/Mr Henry Airiohuodion.jpeg",
+    bio: [
+      "Mr. Henry Omonzojie Airiohuodion holds a Bachelor's degree in Mathematics and Economics (Combined Honours) from the University of Nigeria, Nsukka in the year 1990, followed by completion of his National Youth Service Corps (NYSC) programme in Cross River State in the year 1991.",
+      "He joined the public service in June 1992 as a Research Officer II at the National Directorate of Employment. While in service, he pursued a Master's degree programme at the National Open University of Nigeria as one of the pioneer students of the University and obtained a Master degree of Business Administration (Financial Management) in September, 2010.",
+      "He was in Liaison with other Government Agencies on Policy formulation and implementation, served as NDE Desk Officer of NEPAD (National Economic Development Programme for Africa) and was engaged in project implementation surveys to determine the strengths and weaknesses of Employment Generation Programme Delivery to inform Management strategy and decision making.",
+      "As a result of the confidence reposed on him by the Management, he was given the responsibility to serve as Secretary to the NDE Tenders Board and Head of Budget in 2012. Also due to his resourcefulness and dedication to work, the Management of the National Directorate of Employment nominated him to represent the Agency in the implementation of Community Service, Women and Youths Employment (CSWYE) Project of the Subsidy Reinvestment and Empowerment Programme (SURE-P) under the Federal Ministry of Labour and Productivity, now Federal Ministry of Labour and Employment in 2014 during which he was promoted to the position of Assistant Director.",
+      "When SURE-P was disbanded with the coming of a new Administration in 2015, he returned to his organization. He was subsequently nominated to attend Bureau of Public Procurement (BPP) Certification training course in Badagry, Lagos State. Having passed the Certification exam, he was converted to Procurement Officers Cadre in 2016. While in Procurement Department, he was promoted to the position of Deputy Director Procurement in 2018 where he served and retired in February, 2023.",
+      "He was appointed Director Corporate Services in the Nigerian Meteorological Agency (NiMet) on 21st December, 2023 where he served until he was redeployed to Nigerian Safety Investigation Bureau (NSIB) as Director Corporate Services on the 9th February, 2026.",
+      "He is from Esan West Local Government Area of Edo State and he is married with children.",
+    ],
+  },
 ];
 
 export function getMemberBySlug(slug: string): TeamMember | undefined {
