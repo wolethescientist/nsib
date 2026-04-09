@@ -42,7 +42,7 @@ interface Event {
 
 const SECTOR_IMAGES: Record<string, string> = {
   aviation: "https://images.unsplash.com/photo-1542296332-2e4473faf563?q=80&w=2070&auto=format&fit=crop",
-  maritime: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=2070&auto=format&fit=crop",
+  maritime: "/images/new_maritime.jpg",
   railway: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=2084&auto=format&fit=crop",
 };
 
@@ -184,7 +184,23 @@ function ManagementSlideshow() {
   );
 }
 
+const HERO_IMAGES = [
+  { src: "/images/nsib_building.jpg", alt: "NSIB Headquarters" },
+  { src: "/images/trainstation.avif", alt: "Train Station" },
+  { src: "/images/new_maritime.jpg", alt: "Maritime Operations" },
+  { src: "/images/aeroplane.webp", alt: "Aviation" },
+];
+
 export default function Home() {
+  const [heroIndex, setHeroIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setHeroIndex(i => (i + 1) % HERO_IMAGES.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, []);
+
   const [dynamicReports, setDynamicReports] = useState<Report[]>([]);
   const [dynamicNews, setDynamicNews] = useState<NewsItem[]>([]);
   const [dynamicEvents, setDynamicEvents] = useState<Event[]>([]);
@@ -240,7 +256,17 @@ export default function Home() {
       {/* ── 1. HERO ── */}
       <section className={styles.hero}>
         <div className={styles.heroBackground}>
-          <Image src="/images/nsib_building.jpg" alt="NSIB Headquarters" fill priority className={styles.heroImage} />
+          {HERO_IMAGES.map((img, i) => (
+            <Image
+              key={img.src}
+              src={img.src}
+              alt={img.alt}
+              fill
+              priority={i === 0}
+              className={`${styles.heroImage}${i === heroIndex ? ` ${styles.heroImageActive}` : ""}`}
+              sizes="100vw"
+            />
+          ))}
           <div className={styles.gradientOverlay} />
         </div>
         <div className="container">
