@@ -68,10 +68,16 @@ const DownloadBtn = () => (
 
 const TabNav = ({ active }: { active: string }) => {
   const tabs = [
-    { id: "all",      label: "All Publications",    href: "/publications" },
-    { id: "aircraft", label: "Aircraft Reports",     href: "/air-reports" },
-    { id: "maritime", label: "Maritime Reports",     href: "/marine-reports" },
-    { id: "rail",     label: "Rail Reports",         href: "/rail-reports" },
+    { id: "all",           label: "All Publications",       href: "/publications" },
+    { id: "aircraft",      label: "Aircraft Reports",       href: "/air-reports" },
+    { id: "maritime",      label: "Maritime Reports",       href: "/marine-reports" },
+    { id: "rail",          label: "Rail Reports",           href: "/rail-reports" },
+    { id: "news",          label: "News & Updates",         href: "/news" },
+    { id: "legislations",  label: "Acts & Legislations",    href: "/legislations" },
+    { id: "mou",           label: "MoUs",                   href: "/mou" },
+    { id: "forms",         label: "Forms & Checklists",     href: "/investigation-forms-and-checklists" },
+    { id: "manuals",       label: "Investigation Manuals",  href: "/investigation-manuals" },
+    { id: "foi",           label: "FOI Docs",               href: "/foi" },
   ] as const;
   return (
     <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0", marginBottom: "2rem", overflowX: "auto", gap: 0 }}>

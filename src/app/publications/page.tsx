@@ -32,6 +32,20 @@ const StatusBadge = ({ status }: { status: string }) => {
     "Final Report":    { bg: "#1B2A6B", text: "#fff" },
     "Preliminary":     { bg: "#D97706", text: "#fff" },
     "Safety Advisory": { bg: "#E23030", text: "#fff" },
+    "Published":       { bg: "#1B2A6B", text: "#fff" },
+    "In Force":        { bg: "#1B2A6B", text: "#fff" },
+    "Active":          { bg: "#1B2A6B", text: "#fff" },
+    "Public":          { bg: "#1B2A6B", text: "#fff" },
+    "Current":         { bg: "#1B2A6B", text: "#fff" },
+    "Renewed":         { bg: "#2d6a4f", text: "#fff" },
+    "Amended":         { bg: "#D97706", text: "#fff" },
+    "Under Review":    { bg: "#D97706", text: "#fff" },
+    "Draft":           { bg: "#D97706", text: "#fff" },
+    "Archived":        { bg: "#64748B", text: "#fff" },
+    "Repealed":        { bg: "#E23030", text: "#fff" },
+    "Expired":         { bg: "#E23030", text: "#fff" },
+    "Obsolete":        { bg: "#E23030", text: "#fff" },
+    "Restricted":      { bg: "#E23030", text: "#fff" },
   };
   const c = map[status] ?? { bg: "#64748B", text: "#fff" };
   return (
@@ -53,9 +67,15 @@ const StatusBadge = ({ status }: { status: string }) => {
 // ─── Category Badge ─────────────────────────────────────────────────────────
 const CategoryBadge = ({ cat }: { cat: string }) => {
   const map: Record<string, { bg: string; color: string }> = {
-    Aircraft:  { bg: "#EFF6FF", color: "#1E40AF" },
-    Maritime:  { bg: "#ECFDF5", color: "#065F46" },
-    Rail:      { bg: "#FFF7ED", color: "#92400E" },
+    Aircraft:    { bg: "#EFF6FF", color: "#1E40AF" },
+    Maritime:    { bg: "#ECFDF5", color: "#065F46" },
+    Rail:        { bg: "#FFF7ED", color: "#92400E" },
+    News:        { bg: "#F3E8FF", color: "#6B21A8" },
+    Legislation: { bg: "#FEF2F2", color: "#991B1B" },
+    MoU:         { bg: "#FEF3C7", color: "#92400E" },
+    Form:        { bg: "#E0F2FE", color: "#0369A1" },
+    Manual:      { bg: "#FCE7F3", color: "#9D174D" },
+    FOI:         { bg: "#FFEDD5", color: "#C2410C" },
   };
   const c = map[cat] ?? { bg: "#F1F5F9", color: "#334155" };
   return (
@@ -95,12 +115,18 @@ const DownloadBtn = () => (
 );
 
 // ─── Tab Nav ────────────────────────────────────────────────────────────────
-const TabNav = ({ active }: { active: "all" | "aircraft" | "maritime" | "rail" }) => {
+const TabNav = ({ active }: { active: string }) => {
   const tabs = [
-    { id: "all",      label: "All Publications",    href: "/publications" },
-    { id: "aircraft", label: "Aircraft Reports",     href: "/air-reports" },
-    { id: "maritime", label: "Maritime Reports",     href: "/marine-reports" },
-    { id: "rail",     label: "Rail Reports",         href: "/rail-reports" },
+    { id: "all",           label: "All Publications",       href: "/publications" },
+    { id: "aircraft",      label: "Aircraft Reports",       href: "/air-reports" },
+    { id: "maritime",      label: "Maritime Reports",       href: "/marine-reports" },
+    { id: "rail",          label: "Rail Reports",           href: "/rail-reports" },
+    { id: "news",          label: "News & Updates",         href: "/news" },
+    { id: "legislations",  label: "Acts & Legislations",    href: "/legislations" },
+    { id: "mou",           label: "MoUs",                   href: "/mou" },
+    { id: "forms",         label: "Forms & Checklists",     href: "/investigation-forms-and-checklists" },
+    { id: "manuals",       label: "Investigation Manuals",  href: "/investigation-manuals" },
+    { id: "foi",           label: "FOI Docs",               href: "/foi" },
   ] as const;
   return (
     <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0", marginBottom: "2rem", overflowX: "auto", gap: 0 }}>
@@ -222,6 +248,139 @@ const allPublications: PubRecord[] = [
   { sn: 58, dateReleased: "2024-09-30", reportNo: "RAL/018/2024", category: "Rail", operator: "Nigerian Railway Corp",        regNo: "NRC-ENU-FRT-09", occurrence: "Hot Axle Box",             status: "Final Report" },
   { sn: 59, dateReleased: "2024-08-12", reportNo: "RAL/019/2024", category: "Rail", operator: "Nigerian Railway Corp",        regNo: "NRC-LAG-EXP-08", occurrence: "Overcrowding Incident",    status: "Final Report" },
   { sn: 60, dateReleased: "2024-07-20", reportNo: "RAL/020/2024", category: "Rail", operator: "Lagos Light Rail",             regNo: "LLR-RED-011",    occurrence: "Track Crack",              status: "Safety Advisory" },
+
+  // ── News ──
+  { sn: 61, dateReleased: "2026-03-28", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "Maritime", occurrence: "NSIB Signs MoU with the Nigerian Navy for Maritime Safety", status: "Published" },
+  { sn: 62, dateReleased: "2026-03-15", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "Announcement", occurrence: "Director General Keynote at Annual Transport Safety Summit", status: "Published" },
+  { sn: 63, dateReleased: "2026-03-02", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "Aviation", occurrence: "New Safety Recommendations Issued for Domestic Airlines", status: "Published" },
+  { sn: 64, dateReleased: "2026-02-18", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "Railway", occurrence: "NSIB Completes Preliminary Investigation into Lagos-Ibadan Rail Incident", status: "Published" },
+  { sn: 65, dateReleased: "2026-02-05", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "General", occurrence: "NSIB Hosts International Safety Investigators Workshop", status: "Published" },
+  { sn: 66, dateReleased: "2026-01-20", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "Press Release", occurrence: "Press Release: Annual Safety Statistics Report 2025", status: "Published" },
+  { sn: 67, dateReleased: "2025-12-12", reportNo: "-", category: "News", operator: "NSIB Aviation Dept", regNo: "Safety Alert", occurrence: "Safety Alert: Increased Bird Strike Activities at Major Airports", status: "Published" },
+  { sn: 68, dateReleased: "2025-11-28", reportNo: "-", category: "News", operator: "NSIB IT Unit", regNo: "Announcement", occurrence: "NSIB Launches New Online Occurrence Reporting Portal", status: "Published" },
+  { sn: 69, dateReleased: "2025-11-10", reportNo: "-", category: "News", operator: "NSIB Maritime Dept", regNo: "Maritime", occurrence: "Maritime Advisory: Updated Navigational Protocols for Lagos Port Complex", status: "Published" },
+  { sn: 70, dateReleased: "2025-10-25", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "Aviation", occurrence: "NSIB Partners with ICAO for Regional Capacity Building Programme", status: "Published" },
+  { sn: 71, dateReleased: "2025-10-08", reportNo: "-", category: "News", operator: "NSIB Rail Dept", regNo: "Railway", occurrence: "Rail Safety: Recommendations for Level Crossing Improvements", status: "Published" },
+  { sn: 72, dateReleased: "2025-09-22", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "General", occurrence: "NSIB Investigator Training Programme Graduates 45 New Investigators", status: "Published" },
+  { sn: 73, dateReleased: "2025-09-05", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "Press Release", occurrence: "Press Release: NSIB Response to Dana Air Engine Failure Incident", status: "Published" },
+  { sn: 74, dateReleased: "2025-08-18", reportNo: "-", category: "News", operator: "NSIB Aviation Dept", regNo: "Safety Alert", occurrence: "Safety Alert: Fuel Contamination Warning for Aviation Operators", status: "Published" },
+  { sn: 75, dateReleased: "2025-07-30", reportNo: "-", category: "News", operator: "NSIB Maritime Dept", regNo: "Maritime", occurrence: "NSIB Delegation Attends IMO Sub-Committee on Casualty Investigation", status: "Published" },
+  { sn: 76, dateReleased: "2025-07-12", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "Announcement", occurrence: "Announcement: Public Consultation on Draft Safety Regulation Amendments", status: "Published" },
+  { sn: 77, dateReleased: "2025-06-25", reportNo: "-", category: "News", operator: "NSIB Rail Dept", regNo: "Railway", occurrence: "NSIB Releases Final Report on Abuja Metro Signal Failure Incident", status: "Published" },
+  { sn: 78, dateReleased: "2025-06-08", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "General", occurrence: "Annual Report 2024: Bureau Highlights and Strategic Outlook", status: "Published" },
+  { sn: 79, dateReleased: "2025-05-20", reportNo: "-", category: "News", operator: "NSIB Communications", regNo: "Press Release", occurrence: "Press Release: NSIB Welcomes New Board Members", status: "Published" },
+  { sn: 80, dateReleased: "2025-05-02", reportNo: "-", category: "News", operator: "NSIB Aviation Dept", regNo: "Safety Alert", occurrence: "Safety Alert: Weather-Related Risks During Harmattan Season", status: "Published" },
+
+  // ── Legislations ──
+  { sn: 81, dateReleased: "2026-01-15", reportNo: "LEG/001/2026", category: "Legislation", operator: "General", regNo: "-", occurrence: "NSIB Establishment Act 2022 (Amended 2026)", status: "In Force" },
+  { sn: 82, dateReleased: "2025-11-20", reportNo: "LEG/002/2025", category: "Legislation", operator: "Aviation", regNo: "-", occurrence: "Civil Aviation (Amendment) Act 2025", status: "In Force" },
+  { sn: 83, dateReleased: "2025-09-10", reportNo: "LEG/003/2025", category: "Legislation", operator: "General", regNo: "-", occurrence: "NSIB Safety Investigation Regulations 2025", status: "In Force" },
+  { sn: 84, dateReleased: "2025-08-05", reportNo: "LEG/004/2025", category: "Legislation", operator: "Maritime", regNo: "-", occurrence: "Maritime Operations Safety Act (Amendment) 2025", status: "In Force" },
+  { sn: 85, dateReleased: "2025-06-28", reportNo: "LEG/005/2025", category: "Legislation", operator: "Railways", regNo: "-", occurrence: "Railway Safety Regulations 2025", status: "In Force" },
+  { sn: 86, dateReleased: "2025-05-15", reportNo: "LEG/006/2025", category: "Legislation", operator: "General", regNo: "-", occurrence: "Transport Accident Investigation (Procedures) Regulations", status: "In Force" },
+  { sn: 87, dateReleased: "2025-04-02", reportNo: "LEG/007/2025", category: "Legislation", operator: "Aviation", regNo: "-", occurrence: "Nigerian Airspace Management Agency Act (Consolidated)", status: "In Force" },
+  { sn: 88, dateReleased: "2025-02-18", reportNo: "LEG/008/2025", category: "Legislation", operator: "Maritime", regNo: "-", occurrence: "Cabotage Act (Nigeria Coastal and Inland Shipping)", status: "In Force" },
+  { sn: 89, dateReleased: "2024-12-10", reportNo: "LEG/009/2024", category: "Legislation", operator: "General", regNo: "-", occurrence: "NSIB (Staff Conditions & Benefits) Regulations 2024", status: "In Force" },
+  { sn: 90, dateReleased: "2024-11-05", reportNo: "LEG/010/2024", category: "Legislation", operator: "Aviation", regNo: "-", occurrence: "Civil Aviation Act 2006 (Original)", status: "Amended" },
+  { sn: 91, dateReleased: "2024-09-22", reportNo: "LEG/011/2024", category: "Legislation", operator: "Maritime", regNo: "-", occurrence: "Merchant Shipping Act", status: "In Force" },
+  { sn: 92, dateReleased: "2024-08-14", reportNo: "LEG/012/2024", category: "Legislation", operator: "Railways", regNo: "-", occurrence: "Nigerian Railway Corporation Act (Cap N129 LFN 2004)", status: "In Force" },
+  { sn: 93, dateReleased: "2024-07-01", reportNo: "LEG/013/2024", category: "Legislation", operator: "Aviation", regNo: "-", occurrence: "Federal Airports Authority of Nigeria Act", status: "In Force" },
+  { sn: 94, dateReleased: "2024-06-10", reportNo: "LEG/014/2024", category: "Legislation", operator: "Maritime", regNo: "-", occurrence: "International Maritime Organization Conventions (Ratification)", status: "In Force" },
+  { sn: 95, dateReleased: "2024-05-05", reportNo: "LEG/015/2024", category: "Legislation", operator: "General", regNo: "-", occurrence: "Accident Investigation (Confidentiality) Regulations 2024", status: "In Force" },
+  { sn: 96, dateReleased: "2024-04-18", reportNo: "LEG/016/2024", category: "Legislation", operator: "Aviation", regNo: "-", occurrence: "Nigerian Civil Aviation Regulations (Part 13 - Investigation)", status: "In Force" },
+  { sn: 97, dateReleased: "2024-03-02", reportNo: "LEG/017/2024", category: "Legislation", operator: "Maritime", regNo: "-", occurrence: "NIMASA Establishment Act 2007", status: "Amended" },
+  { sn: 98, dateReleased: "2024-02-10", reportNo: "LEG/018/2024", category: "Legislation", operator: "Railways", regNo: "-", occurrence: "Railway Infrastructure (Safety Standards) Order 2024", status: "In Force" },
+  { sn: 99, dateReleased: "2024-01-20", reportNo: "LEG/019/2024", category: "Legislation", operator: "General", regNo: "-", occurrence: "Freedom of Information Act 2011 (as applicable)", status: "In Force" },
+  { sn: 100, dateReleased: "2023-12-05", reportNo: "LEG/020/2023", category: "Legislation", operator: "General", regNo: "-", occurrence: "NSIB Regulations 2023 (Original)", status: "Amended" },
+
+  // ── MoU ──
+  { sn: 101, dateReleased: "2026-03-10", reportNo: "-", category: "MoU", operator: "Nigerian Navy", regNo: "Maritime", occurrence: "MoU on Maritime Search, Rescue, and Investigation Support", status: "Active" },
+  { sn: 102, dateReleased: "2026-02-15", reportNo: "-", category: "MoU", operator: "Federal Fire Service", regNo: "Multimodal", occurrence: "MoU on First Responder Coordination and Fire Incident Probes", status: "Active" },
+  { sn: 103, dateReleased: "2025-11-22", reportNo: "-", category: "MoU", operator: "NCAA", regNo: "Aviation", occurrence: "MoU on Aviation Data Exchange and Regulatory Synergy", status: "Active" },
+  { sn: 104, dateReleased: "2025-10-05", reportNo: "-", category: "MoU", operator: "NAMA", regNo: "Aviation", occurrence: "MoU on Air Traffic Control Data and Radar Information Sharing", status: "Active" },
+  { sn: 105, dateReleased: "2025-08-30", reportNo: "-", category: "MoU", operator: "NIMASA", regNo: "Maritime", occurrence: "MoU on Marine Accident Investigation and Incident Reporting", status: "Active" },
+  { sn: 106, dateReleased: "2025-06-14", reportNo: "-", category: "MoU", operator: "Nigerian Railway Corp (NRC)", regNo: "Railway", occurrence: "MoU on Railway Safety Protocols and Accident Site Access", status: "Active" },
+  { sn: 107, dateReleased: "2025-04-10", reportNo: "-", category: "MoU", operator: "NEMA", regNo: "Multimodal", occurrence: "MoU on Emergency Management and Disaster Response Integration", status: "Active" },
+  { sn: 108, dateReleased: "2025-02-28", reportNo: "-", category: "MoU", operator: "Univ. of Lagos (UNILAG)", regNo: "Academic", occurrence: "MoU on Academic Research and Safety Engineering Development", status: "Active" },
+  { sn: 109, dateReleased: "2024-11-15", reportNo: "-", category: "MoU", operator: "US NTSB", regNo: "International", occurrence: "MoU on Technical Assistance and Investigator Exchange Program", status: "Active" },
+  { sn: 110, dateReleased: "2024-09-02", reportNo: "-", category: "MoU", operator: "UK AAIB", regNo: "International", occurrence: "MoU on Bilateral Cooperation in Aircraft Accident Investigation", status: "Renewed" },
+  { sn: 111, dateReleased: "2024-07-20", reportNo: "-", category: "MoU", operator: "NiMet", regNo: "Multimodal", occurrence: "MoU on Meteorological Data Sharing for Transport Safety", status: "Active" },
+  { sn: 112, dateReleased: "2024-05-18", reportNo: "-", category: "MoU", operator: "Nigerian Defense Academy", regNo: "Academic", occurrence: "MoU on Strategic Safety Leadership and Crisis Management", status: "Active" },
+  { sn: 113, dateReleased: "2024-03-05", reportNo: "-", category: "MoU", operator: "Aero Contractors", regNo: "Aviation", occurrence: "MoU on Joint Facility Usage for Technical Tear-down Analysis", status: "Active" },
+  { sn: 114, dateReleased: "2023-11-11", reportNo: "-", category: "MoU", operator: "Lagos State Waterways Auth", regNo: "Maritime", occurrence: "MoU on Inland Waterways Safety and Incident Investigation", status: "Active" },
+  { sn: 115, dateReleased: "2023-09-24", reportNo: "-", category: "MoU", operator: "FRSC", regNo: "Multimodal", occurrence: "MoU on Road Traffic Crash Data Sharing and Joint Probes", status: "Active" },
+  { sn: 116, dateReleased: "2023-08-10", reportNo: "-", category: "MoU", operator: "Singapore TSIB", regNo: "International", occurrence: "MoU on Safety Investigation Methodologies and Best Practices", status: "Active" },
+  { sn: 117, dateReleased: "2023-06-15", reportNo: "-", category: "MoU", operator: "Nigerian Police Force", regNo: "Multimodal", occurrence: "MoU on Crime Scene Preservation and Evidence Handling", status: "Active" },
+  { sn: 118, dateReleased: "2022-12-05", reportNo: "-", category: "MoU", operator: "Banjul Accord Group (BAGAIA)", regNo: "International", occurrence: "MoU on Regional Aviation Safety Support and Resource Pooling", status: "Renewed" },
+  { sn: 119, dateReleased: "2021-10-22", reportNo: "-", category: "MoU", operator: "Cranfield University", regNo: "Academic", occurrence: "MoU on Advanced Investigator Training and Certification", status: "Expired" },
+  { sn: 120, dateReleased: "2020-04-18", reportNo: "-", category: "MoU", operator: "FAAN", regNo: "Aviation", occurrence: "MoU on Airport Infrastructure Safety and Emergency Drills", status: "Expired" },
+
+  // ── Form ──
+  { sn: 121, dateReleased: "2026-02-15", reportNo: "NSIB-F-001", category: "Form", operator: "Form", regNo: "-", occurrence: "Initial Notification of Aircraft Accident/Incident", status: "Current" },
+  { sn: 122, dateReleased: "2026-01-10", reportNo: "NSIB-C-012", category: "Form", operator: "Checklist", regNo: "-", occurrence: "Investigator Go-Team Deployment Checklist", status: "Current" },
+  { sn: 123, dateReleased: "2025-11-25", reportNo: "NSIB-F-008", category: "Form", operator: "Form", regNo: "-", occurrence: "Witness Statement Recording Form", status: "Current" },
+  { sn: 124, dateReleased: "2025-10-05", reportNo: "NSIB-L-045", category: "Form", operator: "Log", regNo: "-", occurrence: "Chain of Custody Evidence Log", status: "Current" },
+  { sn: 125, dateReleased: "2025-08-30", reportNo: "NSIB-C-033", category: "Form", operator: "Checklist", regNo: "-", occurrence: "Maritime Vessel Site Survey Checklist", status: "Current" },
+  { sn: 126, dateReleased: "2025-07-22", reportNo: "NSIB-T-004", category: "Form", operator: "Template", regNo: "-", occurrence: "Preliminary Report Standard Template", status: "Current" },
+  { sn: 127, dateReleased: "2025-05-18", reportNo: "NSIB-F-092", category: "Form", operator: "Form", regNo: "-", occurrence: "Railway Safety Incident Notification Form", status: "Current" },
+  { sn: 128, dateReleased: "2025-03-12", reportNo: "NSIB-C-055", category: "Form", operator: "Checklist", regNo: "-", occurrence: "Flight Data Recorder Recovery Checklist", status: "Current" },
+  { sn: 129, dateReleased: "2024-12-05", reportNo: "NSIB-F-019", category: "Form", operator: "Form", regNo: "-", occurrence: "Investigator PPE and Equipment Issuance Form", status: "Current" },
+  { sn: 130, dateReleased: "2024-10-14", reportNo: "NSIB-F-022", category: "Form", operator: "Form", regNo: "-", occurrence: "Confidential Safety Reporting Form", status: "Under Review" },
+  { sn: 131, dateReleased: "2024-09-02", reportNo: "NSIB-C-078", category: "Form", operator: "Checklist", regNo: "-", occurrence: "Drone Operations Pre-Flight Checklist", status: "Current" },
+  { sn: 132, dateReleased: "2024-07-28", reportNo: "NSIB-T-015", category: "Form", operator: "Template", regNo: "-", occurrence: "Final Investigation Report Template (Aviation)", status: "Current" },
+  { sn: 133, dateReleased: "2024-05-10", reportNo: "NSIB-L-088", category: "Form", operator: "Log", regNo: "-", occurrence: "Accident Site Access Registry Log", status: "Current" },
+  { sn: 134, dateReleased: "2024-02-22", reportNo: "NSIB-F-045", category: "Form", operator: "Form", regNo: "-", occurrence: "Autopsy and Medical History Request Form", status: "Current" },
+  { sn: 135, dateReleased: "2023-11-18", reportNo: "NSIB-C-082", category: "Form", operator: "Checklist", regNo: "-", occurrence: "Meteorological Data Collection Checklist", status: "Current" },
+  { sn: 136, dateReleased: "2023-08-30", reportNo: "NSIB-F-110", category: "Form", operator: "Form", regNo: "-", occurrence: "Interim Safety Recommendation Form", status: "Current" },
+  { sn: 137, dateReleased: "2023-04-15", reportNo: "NSIB-F-001-B", category: "Form", operator: "Form", regNo: "-", occurrence: "Legacy Notification Form (v2022)", status: "Obsolete" },
+  { sn: 138, dateReleased: "2022-10-05", reportNo: "NSIB-C-010", category: "Form", operator: "Checklist", regNo: "-", occurrence: "Old Go-Team Dispatch Checklist", status: "Obsolete" },
+  { sn: 139, dateReleased: "2022-06-12", reportNo: "NSIB-T-001", category: "Form", operator: "Template", regNo: "-", occurrence: "Legacy Draft Report Template", status: "Obsolete" },
+  { sn: 140, dateReleased: "2022-01-20", reportNo: "NSIB-F-050", category: "Form", operator: "Form", regNo: "-", occurrence: "Media Briefing Release Form", status: "Under Review" },
+
+  // ── Manuals ──
+  { sn: 141, dateReleased: "2026-03-01", reportNo: "MNL-A-001", category: "Manual", operator: "4th Edition", regNo: "-", occurrence: "Aircraft Accident Investigation Policy and Procedure Manual", status: "Active" },
+  { sn: 142, dateReleased: "2026-01-20", reportNo: "MNL-M-002", category: "Manual", operator: "2nd Edition", regNo: "-", occurrence: "Maritime Casualty Investigation Guidelines", status: "Active" },
+  { sn: 143, dateReleased: "2025-11-15", reportNo: "MNL-R-003", category: "Manual", operator: "1st Edition", regNo: "-", occurrence: "Railway Safety Incident Analysis Manual", status: "Active" },
+  { sn: 144, dateReleased: "2025-09-10", reportNo: "MNL-G-004", category: "Manual", operator: "3rd Edition", regNo: "-", occurrence: "NSIB Human Factors Investigation Manual", status: "Active" },
+  { sn: 145, dateReleased: "2025-07-22", reportNo: "MNL-G-005", category: "Manual", operator: "2nd Edition", regNo: "-", occurrence: "Crisis Communications and Family Assistance Manual", status: "Active" },
+  { sn: 146, dateReleased: "2025-05-18", reportNo: "MNL-G-006", category: "Manual", operator: "3rd Edition", regNo: "-", occurrence: "FDR and CVR Playback and Analysis Protocols", status: "Active" },
+  { sn: 147, dateReleased: "2025-04-05", reportNo: "MNL-A-007", category: "Manual", operator: "2nd Edition", regNo: "-", occurrence: "Helicopter Operations Safety Audit Manual", status: "Active" },
+  { sn: 148, dateReleased: "2025-02-14", reportNo: "MNL-G-008", category: "Manual", operator: "1st Edition", regNo: "-", occurrence: "Metallurgical Failure Analysis Guide", status: "Active" },
+  { sn: 149, dateReleased: "2024-12-01", reportNo: "MNL-M-009", category: "Manual", operator: "2nd Edition", regNo: "-", occurrence: "Inland Waterways Boat Mishap Probe Manual", status: "Active" },
+  { sn: 150, dateReleased: "2024-10-25", reportNo: "MNL-R-010", category: "Manual", operator: "1st Edition", regNo: "-", occurrence: "Train Derailment and Track Defect Investigation Proc.", status: "Draft" },
+  { sn: 151, dateReleased: "2024-09-08", reportNo: "MNL-A-011", category: "Manual", operator: "2nd Edition", regNo: "-", occurrence: "Weather-Related Aviation Accident Investigation", status: "Active" },
+  { sn: 152, dateReleased: "2024-07-15", reportNo: "MNL-G-012", category: "Manual", operator: "4th Edition", regNo: "-", occurrence: "Investigator Training and Certification Handout", status: "Active" },
+  { sn: 153, dateReleased: "2024-05-05", reportNo: "MNL-G-013", category: "Manual", operator: "1st Edition", regNo: "-", occurrence: "Drone / UAV Site Mapping Operational Manual", status: "Active" },
+  { sn: 154, dateReleased: "2024-03-22", reportNo: "MNL-A-014", category: "Manual", operator: "3rd Edition", regNo: "-", occurrence: "Air Traffic Control Audio Transcript Procedures", status: "Active" },
+  { sn: 155, dateReleased: "2023-12-10", reportNo: "MNL-G-015", category: "Manual", operator: "2nd Edition", regNo: "-", occurrence: "Confidential Aviation Reporting System (CARS) Manual", status: "Active" },
+  { sn: 156, dateReleased: "2023-11-05", reportNo: "MNL-G-016", category: "Manual", operator: "3rd Edition", regNo: "-", occurrence: "Evidence Recovery and Chain of Custody Standard", status: "Active" },
+  { sn: 157, dateReleased: "2023-08-14", reportNo: "MNL-M-017", category: "Manual", operator: "1st Edition", regNo: "-", occurrence: "Port Terminal Incident Investigation Guide", status: "Active" },
+  { sn: 158, dateReleased: "2023-04-20", reportNo: "MNL-A-018", category: "Manual", operator: "3rd Edition", regNo: "-", occurrence: "Legacy Aircraft Accident Probe Manual", status: "Archived" },
+  { sn: 159, dateReleased: "2022-11-12", reportNo: "MNL-G-019", category: "Manual", operator: "2nd Edition", regNo: "-", occurrence: "Legacy Human Factors Manual", status: "Archived" },
+  { sn: 160, dateReleased: "2021-08-05", reportNo: "MNL-G-020", category: "Manual", operator: "1st Edition", regNo: "-", occurrence: "Basic Safety Investigator Field Guide (2021)", status: "Archived" },
+
+  // ── FOI ──
+  { sn: 161, dateReleased: "2026-03-31", reportNo: "FOI-2026-Q1-FN", category: "FOI", operator: "Financial", regNo: "-", occurrence: "NSIB Q1 2026 Budget Execution Report", status: "Public" },
+  { sn: 162, dateReleased: "2026-02-15", reportNo: "FOI-2026-PR-02", category: "FOI", operator: "Procurement", regNo: "-", occurrence: "Procurement Plan for FY 2026", status: "Public" },
+  { sn: 163, dateReleased: "2026-01-10", reportNo: "FOI-2025-AN-01", category: "FOI", operator: "Admin", regNo: "-", occurrence: "NSIB Annual FOI Compliance Report 2025", status: "Public" },
+  { sn: 164, dateReleased: "2025-12-30", reportNo: "FOI-2025-Q4-FN", category: "FOI", operator: "Financial", regNo: "-", occurrence: "NSIB Q4 2025 Financial Summary", status: "Public" },
+  { sn: 165, dateReleased: "2025-11-20", reportNo: "FOI-2025-HR-05", category: "FOI", operator: "Admin", regNo: "-", occurrence: "Staff Nominal Roll Summary (Redacted)", status: "Public" },
+  { sn: 166, dateReleased: "2025-10-15", reportNo: "FOI-2025-PR-08", category: "FOI", operator: "Procurement", regNo: "-", occurrence: "Contract Award: Metallurgical Lab Equipment", status: "Public" },
+  { sn: 167, dateReleased: "2025-09-30", reportNo: "FOI-2025-Q3-FN", category: "FOI", operator: "Financial", regNo: "-", occurrence: "NSIB Q3 2025 Budget Execution Report", status: "Public" },
+  { sn: 168, dateReleased: "2025-08-12", reportNo: "FOI-2025-PL-02", category: "FOI", operator: "Policy", regNo: "-", occurrence: "FOI Request Treatment and Response Policy", status: "Public" },
+  { sn: 169, dateReleased: "2025-07-05", reportNo: "FOI-2025-LG-03", category: "FOI", operator: "Legal", regNo: "-", occurrence: "Legal Framework for Information Disclosure", status: "Public" },
+  { sn: 170, dateReleased: "2025-06-30", reportNo: "FOI-2025-Q2-FN", category: "FOI", operator: "Financial", regNo: "-", occurrence: "NSIB Q2 2025 Financial Summary", status: "Public" },
+  { sn: 171, dateReleased: "2025-05-18", reportNo: "FOI-2025-PR-04", category: "FOI", operator: "Procurement", regNo: "-", occurrence: "Contract Award: IT Network Upgrade", status: "Public" },
+  { sn: 172, dateReleased: "2025-04-10", reportNo: "FOI-2025-PR-03", category: "FOI", operator: "Procurement", regNo: "-", occurrence: "Bidding Notice: Vehicle Fleet Maintenance", status: "Public" },
+  { sn: 173, dateReleased: "2025-03-31", reportNo: "FOI-2025-Q1-FN", category: "FOI", operator: "Financial", regNo: "-", occurrence: "NSIB Q1 2025 Budget Execution Report", status: "Public" },
+  { sn: 174, dateReleased: "2025-02-28", reportNo: "FOI-2025-AD-02", category: "FOI", operator: "Admin", regNo: "-", occurrence: "List of NSIB Board Members and Allowances", status: "Public" },
+  { sn: 175, dateReleased: "2025-01-15", reportNo: "FOI-2024-AN-01", category: "FOI", operator: "Admin", regNo: "-", occurrence: "NSIB Annual FOI Compliance Report 2024", status: "Public" },
+  { sn: 176, dateReleased: "2024-12-30", reportNo: "FOI-2024-Q4-FN", category: "FOI", operator: "Financial", regNo: "-", occurrence: "NSIB Q4 2024 Financial Summary", status: "Archived" },
+  { sn: 177, dateReleased: "2024-10-05", reportNo: "FOI-2024-PR-11", category: "FOI", operator: "Procurement", regNo: "-", occurrence: "Contract Award: Abuja HQ Facility Management", status: "Archived" },
+  { sn: 178, dateReleased: "2024-06-30", reportNo: "FOI-2024-Q2-FN", category: "FOI", operator: "Financial", regNo: "-", occurrence: "NSIB Q2 2024 Budget Execution Report", status: "Archived" },
+  { sn: 179, dateReleased: "2024-03-15", reportNo: "FOI-2024-PL-01", category: "FOI", operator: "Policy", regNo: "-", occurrence: "Data Protection and Privacy Policy", status: "Public" },
+  { sn: 180, dateReleased: "2023-12-31", reportNo: "FOI-2023-AN-01", category: "FOI", operator: "Admin", regNo: "-", occurrence: "NSIB Annual FOI Compliance Report 2023", status: "Archived" },
+
 ];
 
 const ITEMS_PER_PAGE = 20;
@@ -322,10 +481,10 @@ export default function PublicationsPage() {
               style={{ display: "flex", gap: "2.5rem", marginTop: "2.5rem", flexWrap: "wrap" }}
             >
               {[
-                { label: "Total Reports", value: "60+" },
-                { label: "Aircraft Investigations", value: "20" },
-                { label: "Maritime Investigations", value: "20" },
-                { label: "Rail Investigations", value: "20" },
+                { label: "Total Records", value: "180+" },
+                { label: "Aircraft Reports", value: "20" },
+                { label: "Maritime Reports", value: "20" },
+                { label: "Rail Reports", value: "20" },
               ].map((s, i) => (
                 <div key={i}>
                   <div style={{ fontSize: "1.6rem", fontWeight: 800, color: "white" }}>{s.value}</div>
@@ -388,13 +547,13 @@ export default function PublicationsPage() {
               <thead>
                 <tr style={{ backgroundColor: "#1B2A6B" }}>
                   <TH width="52px">S/N</TH>
-                  <TH width="110px">Date Released</TH>
-                  <TH width="140px">Report No.</TH>
+                  <TH width="110px">Date</TH>
+                  <TH width="140px">Ref / Rep No.</TH>
                   <TH width="100px">Category</TH>
-                  <TH>Operator / Owner</TH>
-                  <TH width="140px">REG / IMO No.</TH>
-                  <TH>Occurrence Type</TH>
-                  <TH width="130px">Status</TH>
+                  <TH>Entity / Author</TH>
+                  <TH width="140px">Scope / Reg No.</TH>
+                  <TH>Title / Subject</TH>
+                  <TH width="100px">Status</TH>
                   <TH width="80px">Download</TH>
                 </tr>
               </thead>
@@ -492,7 +651,11 @@ export default function PublicationsPage() {
         {/* Legend */}
         <div style={{ display: "flex", gap: "1.5rem", marginTop: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
           <span style={{ fontSize: "0.8rem", color: "#94A3B8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Status:</span>
-          {[["Final Report", "#1B2A6B"], ["Preliminary", "#D97706"], ["Safety Advisory", "#E23030"]].map(([label, bg]) => (
+          {[
+            ["Final Report / Public / In Force", "#1B2A6B"], 
+            ["Preliminary / Under Review", "#D97706"], 
+            ["Advisory / Obsolete", "#E23030"]
+          ].map(([label, bg]) => (
             <div key={label} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
               <span style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: bg, display: "inline-block" }} />
               <span style={{ fontSize: "0.8rem", color: "#64748B" }}>{label}</span>
