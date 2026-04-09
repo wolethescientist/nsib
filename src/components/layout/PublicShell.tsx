@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import ChatWidget from "@/components/ui/ChatWidget";
 
 export default function PublicShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ export default function PublicShell({ children }: { children: React.ReactNode })
         {children}
       </div>
       {!isPortal && <Footer />}
+      {!isPortal && <ChatWidget />}
     </>
   );
 }
