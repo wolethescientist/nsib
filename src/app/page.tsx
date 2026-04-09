@@ -104,13 +104,13 @@ function formatDate(dateStr: string): string {
 
 
 const CATEGORY_BADGE: Record<string, { bg: string; text: string; label: string }> = {
-  announcement:  { bg: "rgba(27,42,107,0.1)",  text: "#1B2A6B", label: "Announcement" },
-  press_release: { bg: "rgba(226,48,48,0.1)",   text: "#E23030", label: "Press Release" },
-  safety:        { bg: "rgba(245,158,11,0.1)",  text: "#B45309", label: "Safety Alert" },
-  general:       { bg: "rgba(100,116,139,0.1)", text: "#475569", label: "General" },
-  aviation:      { bg: "rgba(27,42,107,0.08)",  text: "#1B2A6B", label: "Aviation" },
-  maritime:      { bg: "rgba(0,119,182,0.1)",   text: "#0077B6", label: "Maritime" },
-  railway:       { bg: "rgba(106,5,114,0.08)",  text: "#6A0572", label: "Railway" },
+  announcement: { bg: "rgba(27,42,107,0.1)", text: "#1B2A6B", label: "Announcement" },
+  press_release: { bg: "rgba(226,48,48,0.1)", text: "#E23030", label: "Press Release" },
+  safety: { bg: "rgba(245,158,11,0.1)", text: "#B45309", label: "Safety Alert" },
+  general: { bg: "rgba(100,116,139,0.1)", text: "#475569", label: "General" },
+  aviation: { bg: "rgba(27,42,107,0.08)", text: "#1B2A6B", label: "Aviation" },
+  maritime: { bg: "rgba(0,119,182,0.1)", text: "#0077B6", label: "Maritime" },
+  railway: { bg: "rgba(106,5,114,0.08)", text: "#6A0572", label: "Railway" },
 };
 
 
@@ -188,7 +188,7 @@ const HERO_IMAGES = [
   { src: "/images/nsib_building.jpg", alt: "NSIB Headquarters" },
   { src: "/images/trainstation.avif", alt: "Train Station" },
   { src: "/images/new_maritime.jpg", alt: "Maritime Operations" },
-  { src: "/images/airplane.webp", alt: "Aviation" },
+  { src: "/images/air.jpg", alt: "Aviation" },
 ];
 
 export default function Home() {
@@ -209,44 +209,44 @@ export default function Home() {
     fetch("/api/reports?limit=6")
       .then(r => r.json())
       .then(data => { if (data.reports?.length) setDynamicReports(data.reports); })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
     fetch("/api/news?limit=4")
       .then(r => r.json())
       .then(data => { if (data.news?.length) setDynamicNews(data.news); })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
     fetch("/api/events?upcoming=true&limit=3")
       .then(r => r.json())
       .then(data => { if (data.events?.length) setDynamicEvents(data.events); })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const displayReports = dynamicReports.length >= 3
     ? dynamicReports.slice(0, 3).map(r => ({
-        type: SECTOR_LABEL[r.sector] || r.sector,
-        title: r.title,
-        date: formatDate(r.published_at),
-        status: TYPE_LABEL[r.type] || r.type,
-        image: SECTOR_IMAGES[r.sector] || SECTOR_IMAGES.aviation,
-        sector: r.sector,
-        href: r.file_url,
-        isDynamic: true,
-      }))
+      type: SECTOR_LABEL[r.sector] || r.sector,
+      title: r.title,
+      date: formatDate(r.published_at),
+      status: TYPE_LABEL[r.type] || r.type,
+      image: SECTOR_IMAGES[r.sector] || SECTOR_IMAGES.aviation,
+      sector: r.sector,
+      href: r.file_url,
+      isDynamic: true,
+    }))
     : PLACEHOLDER_REPORTS;
 
   const displayNews = dynamicNews.length > 0
     ? dynamicNews.slice(0, 4).map(n => ({
-        title: n.title,
-        date: formatDate(n.published_at),
-        category: n.category,
-        id: n.id,
-        image: n.image_url || null,
-      }))
+      title: n.title,
+      date: formatDate(n.published_at),
+      category: n.category,
+      id: n.id,
+      image: n.image_url || null,
+    }))
     : PLACEHOLDER_NEWS;
 
   const displayEvents = dynamicEvents.length > 0 ? dynamicEvents : PLACEHOLDER_EVENTS;
@@ -300,31 +300,31 @@ export default function Home() {
                   title: "Online Operations Centre",
                   desc: "Access the NSIB digital operations hub",
                   href: "/operations-centre",
-                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>,
+                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>,
                 },
                 {
                   title: "Live Flight Tracker",
                   desc: "Monitor real-time aviation data",
                   href: "/flight-track",
-                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.6L3 8l5 5-3.2 3.2-2.4-.8L2 16l3 3c.6.6 1.4.9 2.2.9h.1c.8-.1 1.5-.4 2.1-.9l.6-.6 3.2-3.2 5 5 1.2-.7c.4-.2.7-.6.6-1.1z"/></svg>,
+                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.6L3 8l5 5-3.2 3.2-2.4-.8L2 16l3 3c.6.6 1.4.9 2.2.9h.1c.8-.1 1.5-.4 2.1-.9l.6-.6 3.2-3.2 5 5 1.2-.7c.4-.2.7-.6.6-1.1z" /></svg>,
                 },
                 {
                   title: "Ship / Vessel Tracker",
                   desc: "Maritime operations monitoring",
                   href: "/vessel-tracking",
-                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 21h20"/><path d="M12 9V5a2 2 0 0 1 2-2h2"/><path d="M20 21v-4a2 2 0 0 0-2-2h-3.5L12 9l-2.5 6H6a2 2 0 0 0-2 2v4"/></svg>,
+                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 21h20" /><path d="M12 9V5a2 2 0 0 1 2-2h2" /><path d="M20 21v-4a2 2 0 0 0-2-2h-3.5L12 9l-2.5 6H6a2 2 0 0 0-2 2v4" /></svg>,
                 },
                 {
                   title: "NSIB Directorates",
                   desc: "Explore our departments and units",
                   href: "/directorates",
-                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>,
                 },
                 {
                   title: "Reports & Publications",
                   desc: "Access public safety archives",
                   href: "/publications",
-                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>,
+                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>,
                 },
               ].map((item, i) => (
                 <Link href={item.href} className={styles.accessItem} key={i}>
@@ -414,7 +414,7 @@ export default function Home() {
             <ScrollReveal direction="left" delay={0.1} distance={40} className={styles.visionCard}>
               <div className={styles.visionIcon}>
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
                 </svg>
               </div>
               <span className={styles.visionTag}>Our Vision</span>
@@ -427,7 +427,7 @@ export default function Home() {
             <ScrollReveal direction="right" delay={0.25} distance={40} className={`${styles.visionCard} ${styles.missionCard}`}>
               <div className={styles.visionIcon}>
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                  <polygon points="3 11 22 2 13 21 11 13 3 11" />
                 </svg>
               </div>
               <span className={styles.visionTag}>Our Mission</span>
@@ -457,7 +457,7 @@ export default function Home() {
             {/* YouTube Video */}
             <div className={styles.dgVideoWrap}>
               <div className={styles.dgVideoLabel}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.52V8.48L15.5 12l-5.75 3.52z"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.52V8.48L15.5 12l-5.75 3.52z" /></svg>
                 Assumption of Office
               </div>
               <div className={styles.dgVideoFrame}>
@@ -504,9 +504,9 @@ export default function Home() {
           </div>
           <div className={styles.sectorsGrid}>
             {[
-              { id: "aviation", num: "01", title: "Aviation Safety", desc: "Investigating civil aviation occurrences within Nigerian airspace or involving Nigerian registered aircraft globally.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.6L3 8l5 5-3.2 3.2-2.4-.8L2 16l3 3c.6.6 1.4.9 2.2.9h.1c.8-.1 1.5-.4 2.1-.9l.6-.6 3.2-3.2 5 5 1.2-.7c.4-.2.7-.6.6-1.1z"/></svg>, image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop" },
-              { id: "maritime", num: "02", title: "Maritime Safety", desc: "Conducting impartial investigations into marine casualties and incidents on Nigerian territorial waters.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 21h20"/><path d="M12 9V5a2 2 0 0 1 2-2h2"/><path d="M20 21v-4a2 2 0 0 0-2-2h-3.5L12 9l-2.5 6H6a2 2 0 0 0-2 2v4"/></svg>, image: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=2070&auto=format&fit=crop" },
-              { id: "rail", num: "03", title: "Railway Safety", desc: "Analyzing railway accidents and serious incidents to improve the safety of the national rail network.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="M8 15h.01"/><path d="M16 15h.01"/></svg>, image: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=2084&auto=format&fit=crop" },
+              { id: "aviation", num: "01", title: "Aviation Safety", desc: "Investigating civil aviation occurrences within Nigerian airspace or involving Nigerian registered aircraft globally.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.6L3 8l5 5-3.2 3.2-2.4-.8L2 16l3 3c.6.6 1.4.9 2.2.9h.1c.8-.1 1.5-.4 2.1-.9l.6-.6 3.2-3.2 5 5 1.2-.7c.4-.2.7-.6.6-1.1z" /></svg>, image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop" },
+              { id: "maritime", num: "02", title: "Maritime Safety", desc: "Conducting impartial investigations into marine casualties and incidents on Nigerian territorial waters.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 21h20" /><path d="M12 9V5a2 2 0 0 1 2-2h2" /><path d="M20 21v-4a2 2 0 0 0-2-2h-3.5L12 9l-2.5 6H6a2 2 0 0 0-2 2v4" /></svg>, image: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=2070&auto=format&fit=crop" },
+              { id: "rail", num: "03", title: "Railway Safety", desc: "Analyzing railway accidents and serious incidents to improve the safety of the national rail network.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="16" rx="2" /><path d="M4 11h16" /><path d="M12 3v8" /><path d="m8 19-2 3" /><path d="m18 22-2-3" /><path d="M8 15h.01" /><path d="M16 15h.01" /></svg>, image: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=2084&auto=format&fit=crop" },
             ].map((sector, index) => (
               <ScrollReveal direction="up" delay={0.1 + index * 0.15} distance={40} key={sector.id} className={styles.sectorCard}>
                 <div className={styles.sectorImageContainer}>
