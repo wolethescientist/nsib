@@ -19,7 +19,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=500&height=505&small_header=true&adapt_container_width=false&hide_cover=true&show_facepile=false\")",
       "Bash(git checkout:*)",
       "WebFetch(domain:twittercommunity.com)",
-      "WebFetch(domain:devcommunity.x.com)"
+      "WebFetch(domain:devcommunity.x.com)",
+      "Bash(python \"C:\\\\Users\\\\david\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"government portal data table professional\" --design-system -p \"NSIB Publications\" -f markdown)"
     ]
   }
 }

@@ -1,419 +1,422 @@
 "use client";
 
-import React, { useState } from 'react';
-import ScrollReveal from '@/components/ui/ScrollReveal';
-import Link from 'next/link';
-import AuthRedirectButton from '@/components/ui/AuthRedirectButton';
+import { useState, useMemo, useRef } from "react";
+import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 
-// SVGs
+// ─── Shared Components (Duplicated to avoid touching All Pubs) ──────────────
+
 const DownloadIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="7 10 12 15 17 10"/>
+    <line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
 );
 
 const SearchIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </svg>
 );
 
-const UploadIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+const ChevronIcon = ({ dir }: { dir: "left" | "right" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    {dir === "left" ? <polyline points="15 18 9 12 15 6"/> : <polyline points="9 18 15 12 9 6"/>}
+  </svg>
 );
 
-const reports = [
-  {
-    id: 1,
-    title: "Flight 113 Runway Excursion at Murtala Muhammed Airport",
-    status: "Final Report",
-    date: "Mar 10, 2024",
-    description: "Final formal investigation into the runway excursion incident detailing landing gear anomalies, pilot inputs, and meteorological conditions.",
-    image: "https://images.unsplash.com/photo-1542282088-fe8426682b8f?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: 2,
-    title: "Mid-Air Proximity Warning Involving Boeing 737",
-    status: "Preliminary",
-    date: "Feb 05, 2024",
-    description: "Initial safety findings regarding an airborne loss of separation event, focusing on ATC coordination and TCAS resolution advisories.",
-    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: 3,
-    title: "Review of Regional Operations & Weather Dispatch",
-    status: "Safety Advisory",
-    date: "Jan 12, 2024",
-    description: "Advisory document releasing recommendations for safe dispatch protocols during the harmattan haze restrictions.",
-    image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop"
-  }
+const StatusBadge = ({ status }: { status: string }) => {
+  const map: Record<string, { bg: string; text: string }> = {
+    "Final Report":       { bg: "#1B2A6B", text: "#fff" },
+    "Preliminary":        { bg: "#D97706", text: "#fff" },
+    "Preliminary Report": { bg: "#D97706", text: "#fff" },
+    "Interim Statement":  { bg: "#0284c7", text: "#fff" },
+    "Safety Advisory":    { bg: "#E23030", text: "#fff" },
+  };
+  const c = map[status] ?? { bg: "#64748B", text: "#fff" };
+  return (
+    <span style={{
+      display: "inline-block",
+      padding: "0.2rem 0.65rem",
+      borderRadius: "10px",
+      fontSize: "0.68rem",
+      fontWeight: 700,
+      textTransform: "uppercase",
+      letterSpacing: "0.05em",
+      backgroundColor: c.bg,
+      color: c.text,
+      whiteSpace: "nowrap",
+    }}>{status}</span>
+  );
+};
+
+const DownloadBtn = () => (
+  <button
+    onClick={(e) => { e.stopPropagation(); }}
+    style={{
+      display: "inline-flex", alignItems: "center", gap: "0.35rem",
+      padding: "0.35rem 0.8rem",
+      backgroundColor: "#E23030", color: "white",
+      border: "none", borderRadius: "6px",
+      fontSize: "0.72rem", fontWeight: 700,
+      cursor: "pointer", transition: "all 0.18s ease",
+      whiteSpace: "nowrap",
+    }}
+    onMouseEnter={e => { e.currentTarget.style.backgroundColor = "#B92424"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+    onMouseLeave={e => { e.currentTarget.style.backgroundColor = "#E23030"; e.currentTarget.style.transform = "none"; }}
+  >
+    <DownloadIcon />PDF
+  </button>
+);
+
+const TabNav = ({ active }: { active: "all" | "aircraft" | "maritime" | "rail" }) => {
+  const tabs = [
+    { id: "all",      label: "All Publications",    href: "/publications" },
+    { id: "aircraft", label: "Aircraft Reports",     href: "/air-reports" },
+    { id: "maritime", label: "Maritime Reports",     href: "/marine-reports" },
+    { id: "rail",     label: "Rail Reports",         href: "/rail-reports" },
+  ] as const;
+  return (
+    <div style={{ display: "flex", borderBottom: "2px solid #E2E8F0", marginBottom: "2rem", overflowX: "auto", gap: 0 }}>
+      {tabs.map(tab => {
+        const isActive = tab.id === active;
+        return (
+          <Link key={tab.id} href={tab.href} style={{
+            padding: "0.85rem 1.5rem",
+            fontSize: "0.9rem", fontWeight: isActive ? 700 : 600,
+            color: isActive ? "#E23030" : "#3A3A3A",
+            borderBottom: isActive ? "2px solid #E23030" : "2px solid transparent",
+            marginBottom: "-2px", whiteSpace: "nowrap",
+            transition: "color 0.2s", textDecoration: "none",
+          }}
+          onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = "#1B2A6B"; }}
+          onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = "#3A3A3A"; }}
+          >{tab.label}</Link>
+        );
+      })}
+    </div>
+  );
+};
+
+const TH = ({ children, width }: { children: React.ReactNode; width?: string }) => (
+  <th style={{
+    padding: "0.85rem 1rem", textAlign: "left",
+    fontSize: "0.72rem", fontWeight: 700,
+    color: "white", textTransform: "uppercase",
+    letterSpacing: "0.07em", whiteSpace: "nowrap",
+    width, borderRight: "1px solid rgba(255,255,255,0.1)",
+  }}>{children}</th>
+);
+
+const TD = ({ children, muted }: { children: React.ReactNode; muted?: boolean }) => (
+  <td style={{
+    padding: "0.9rem 1rem",
+    fontSize: "0.855rem",
+    color: muted ? "#6A6B70" : "#1E293B",
+    borderBottom: "1px solid #F1F5F9",
+    verticalAlign: "middle",
+  }}>{children}</td>
+);
+
+// ─── Data ───────────────────────────────────────────────────────────────────
+
+type PubRecord = {
+  sn: number;
+  dateReleased: string;
+  reportNo: string;
+  category: string;
+  operator: string;
+  regNo: string;
+  occurrence: string;
+  status: string;
+  // added to map to the new columns seamlessly without breaking existing data structures
+  aircraftType?: string;
+};
+
+const aircraftReports: PubRecord[] = [
+  { sn:  1, dateReleased: "2026-03-15", reportNo: "AAL/001/2026", category: "Aircraft", operator: "Allied Air Limited",                 regNo: "5N-AAL",         occurrence: "Runway Excursion",         status: "Preliminary Report" },
+  { sn:  2, dateReleased: "2026-02-28", reportNo: "FAMSL/002/2026", category: "Aircraft", operator: "Flybird Aircraft Management Services Limited", regNo: "5N-FBD",         occurrence: "Engine Failure",           status: "Interim Statement" },
+  { sn:  3, dateReleased: "2026-02-10", reportNo: "FASL/003/2026", category: "Aircraft", operator: "Flints Aero Services Limited",                  regNo: "5N-FLT",         occurrence: "Bird Strike",              status: "Preliminary Report" },
+  { sn:  4, dateReleased: "2025-12-20", reportNo: "EWALSL/004/2025", category: "Aircraft", operator: "East Wind Aviation Logistics Services Limited", regNo: "5N-EWA",         occurrence: "Hard Landing",             status: "Interim Statement" },
+  { sn:  5, dateReleased: "2025-11-05", reportNo: "MAL/005/2025", category: "Aircraft", operator: "Max Air Limited",               regNo: "5N-MAX",         occurrence: "Tail Strike",              status: "Preliminary Report" },
+  { sn:  6, dateReleased: "2025-10-18", reportNo: "AAL/006/2025", category: "Aircraft", operator: "Allied Air Limited",          regNo: "5N-AAM",         occurrence: "Loss of Control",          status: "Interim Statement" },
+  { sn:  7, dateReleased: "2025-09-22", reportNo: "FAMSL/007/2025", category: "Aircraft", operator: "Flybird Aircraft Management Services Limited", regNo: "5N-FBE",         occurrence: "Fuel Exhaustion",          status: "Preliminary Report" },
+  { sn:  8, dateReleased: "2025-08-14", reportNo: "FASL/008/2025", category: "Aircraft", operator: "Flints Aero Services Limited",                 regNo: "5N-FLU",         occurrence: "Landing Gear Failure",     status: "Interim Statement" },
+  { sn:  9, dateReleased: "2025-07-30", reportNo: "EWALSL/009/2025", category: "Aircraft", operator: "East Wind Aviation Logistics Services Limited", regNo: "5N-EWB",         occurrence: "Unstabilised Approach",    status: "Preliminary Report" },
+  { sn: 10, dateReleased: "2025-06-11", reportNo: "MAL/010/2025", category: "Aircraft", operator: "Max Air Limited",                 regNo: "5N-MAY",         occurrence: "Ground Collision",         status: "Interim Statement" },
+  { sn: 11, dateReleased: "2025-05-03", reportNo: "AAL/011/2025", category: "Aircraft", operator: "Allied Air Limited",                  regNo: "5N-AAO",         occurrence: "Aborted Takeoff",          status: "Preliminary Report" },
+  { sn: 12, dateReleased: "2025-04-19", reportNo: "FAMSL/012/2025", category: "Aircraft", operator: "Flybird Aircraft Management Services Limited", regNo: "5N-FBF",         occurrence: "Hydraulic Failure",        status: "Interim Statement" },
+  { sn: 13, dateReleased: "2025-03-25", reportNo: "FASL/013/2025", category: "Aircraft", operator: "Flints Aero Services Limited",                  regNo: "5N-FLV",         occurrence: "Runway Incursion",         status: "Preliminary Report" },
+  { sn: 14, dateReleased: "2025-02-12", reportNo: "EWALSL/014/2025", category: "Aircraft", operator: "East Wind Aviation Logistics Services Limited", regNo: "5N-EWC",         occurrence: "CFIT Warning",             status: "Interim Statement" },
+  { sn: 15, dateReleased: "2024-12-07", reportNo: "MAL/015/2024", category: "Aircraft", operator: "Max Air Limited",               regNo: "5N-MAZ",         occurrence: "Smoke in Cabin",           status: "Preliminary Report" },
+  { sn: 16, dateReleased: "2024-11-14", reportNo: "AAL/016/2024", category: "Aircraft", operator: "Allied Air Limited",          regNo: "5N-AAP",         occurrence: "Propeller Malfunction",    status: "Interim Statement" },
+  { sn: 17, dateReleased: "2024-10-02", reportNo: "FAMSL/017/2024", category: "Aircraft", operator: "Flybird Aircraft Management Services Limited", regNo: "5N-FBG",         occurrence: "Windshear Encounter",      status: "Preliminary Report" },
+  { sn: 18, dateReleased: "2024-09-18", reportNo: "FASL/018/2024", category: "Aircraft", operator: "Flints Aero Services Limited",                 regNo: "5N-FLW",         occurrence: "Electrical Failure",       status: "Interim Statement" },
+  { sn: 19, dateReleased: "2024-08-29", reportNo: "EWALSL/019/2024", category: "Aircraft", operator: "East Wind Aviation Logistics Services Limited", regNo: "5N-EWD",         occurrence: "Emergency Landing",        status: "Preliminary Report" },
+  { sn: 20, dateReleased: "2024-07-15", reportNo: "MAL/020/2024", category: "Aircraft", operator: "Max Air Limited",                 regNo: "5N-MAA",         occurrence: "Turbulence Incident",      status: "Interim Statement" },
 ];
 
-export default function AirReportsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+const ITEMS_PER_PAGE = 20;
+const YEARS = ["2026", "2025", "2024"];
 
-  const filteredReports = reports.filter(rep => 
-    rep.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    rep.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+
+// ─── Page ───────────────────────────────────────────────────────────────────
+
+export default function AirReportsPage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const opacityFade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  const [search, setSearch] = useState("");
+  const [yearFilter, setYearFilter] = useState("");
+  const [page, setPage] = useState(1);
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase();
+    return aircraftReports
+      .filter(r => {
+        const matchSearch = !q ||
+          r.reportNo.toLowerCase().includes(q) ||
+          r.operator.toLowerCase().includes(q) ||
+          r.occurrence.toLowerCase().includes(q) ||
+          r.category.toLowerCase().includes(q) ||
+          r.regNo.toLowerCase().includes(q);
+        const matchYear = !yearFilter || r.dateReleased.startsWith(yearFilter);
+        return matchSearch && matchYear;
+      })
+      .sort((a, b) => new Date(b.dateReleased).getTime() - new Date(a.dateReleased).getTime());
+  }, [search, yearFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  const paged = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  const handleSearch = (v: string) => { setSearch(v); setPage(1); };
+  const handleYear   = (v: string) => { setYearFilter(v); setPage(1); };
 
   return (
-    <main style={{ 
-      backgroundColor: '#f8fafc', 
-      minHeight: '100vh', 
-      paddingBottom: '8rem',
-      overflowX: 'hidden',
-      perspective: '1000px'
-    }}>
-      {/* Antigravity Hero Section */}
-      <section style={{ 
-        backgroundColor: 'var(--nsib-navy)', 
-        color: 'white', 
-        padding: '8rem 2rem 6rem',
-        position: 'relative',
-        transformStyle: 'preserve-3d',
-        overflow: 'hidden'
-      }}>
-        {/* Dynamic Aviation Background Layers */}
+    <main style={{ paddingBottom: "8rem", backgroundColor: "var(--bg-primary)", overflowX: "hidden" }}>
+      {/* ── Hero ── */}
+      <section
+        ref={containerRef}
+        style={{
+          backgroundColor: "var(--nsib-navy)", color: "white",
+          padding: "12rem 2rem 10rem", position: "relative",
+          overflow: "hidden", marginBottom: "4rem", perspective: "1000px",
+        }}
+      >
         <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: 'radial-gradient(circle at top right, rgba(0, 168, 255, 0.2) 0%, transparent 40%), radial-gradient(circle at bottom center, rgba(255, 255, 255, 0.1) 0%, transparent 60%)',
-          zIndex: 0
+          position: "absolute", inset: 0,
+          backgroundImage: "radial-gradient(circle at top right, rgba(0, 168, 255, 0.2) 0%, transparent 40%), radial-gradient(circle at bottom center, rgba(255, 255, 255, 0.1) 0%, transparent 60%)",
+          zIndex: 0,
         }} />
-        
-        {/* Floating background elements */}
-        <div className="floating-element" style={{ position: 'absolute', top: '5%', right: '8%', width: '220px', height: '220px', borderRadius: '40px', background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 100%)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.05)', transform: 'rotateZ(10deg)', zIndex: 1 }} />
-        <div className="floating-element-slow" style={{ position: 'absolute', bottom: '-8%', left: '12%', width: '300px', height: '300px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(0,168,255,0.08) 0%, rgba(0,168,255,0) 100%)', backdropFilter: 'blur(20px)', zIndex: 1 }} />
-        
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <ScrollReveal>
-            <Link href="/publications" style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              fontSize: "0.85rem",
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.7)",
-              marginBottom: "2rem",
-              transition: "color 0.2s ease",
-              textDecoration: "none"
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.color = "white"}
-            onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}
+        <motion.div style={{
+          position: "absolute", top: "15%", right: "10%",
+          width: "180px", height: "180px", borderRadius: "24px",
+          background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%)",
+          backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.1)",
+          boxShadow: "0 30px 60px rgba(0,0,0,0.1)", zIndex: 1, y: y1,
+        }}
+          animate={{ rotateZ: [15, 20, 15], rotateX: [10, 15, 10], rotateY: [-10, -5, -10], y: [0, -20, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div style={{
+          position: "absolute", bottom: "5%", left: "8%",
+          width: "300px", height: "300px", borderRadius: "50%",
+          background: "linear-gradient(135deg, rgba(0,168,255,0.08) 0%, rgba(0,168,255,0) 100%)",
+          backdropFilter: "blur(24px)", zIndex: 1, y: y2,
+        }}
+          animate={{ scale: [1, 1.05, 1], y: [0, -15, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div className="container" style={{ position: "relative", zIndex: 2, opacity: opacityFade }}
+          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div style={{ maxWidth: "800px" }}>
+            <motion.h1 initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+              style={{ color: "white", fontSize: "clamp(3.5rem, 6vw, 4.5rem)", fontWeight: 800, lineHeight: 1.1, marginBottom: "1.5rem", textShadow: "0 20px 40px rgba(0,0,0,0.4)", letterSpacing: "-0.02em" }}
             >
-              <span>←</span>
-              <span>Back to News & Pubs</span>
-            </Link>
-            <br />
-            <div style={{
-              display: 'inline-block',
-              padding: '0.5rem 1rem',
-              backgroundColor: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              borderRadius: '30px',
-              backdropFilter: 'blur(10px)',
-              marginBottom: '1.5rem',
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase'
-            }}>
-              Transportation Safety
-            </div>
-            <h1 style={{ 
-              color: 'white', 
-              fontSize: 'clamp(3rem, 5vw, 4.5rem)', 
-              fontWeight: 800,
-              lineHeight: 1.1,
-              marginBottom: '1.5rem',
-              textShadow: '0 10px 30px rgba(0,0,0,0.3)'
-            }}>
-              Aviation Accident <br/> Reports
-            </h1>
-            <p style={{ 
-              fontSize: '1.25rem', 
-              color: 'rgba(255, 255, 255, 0.8)', 
-              maxWidth: '650px', 
-              lineHeight: 1.6,
-              marginBottom: '2.5rem',
-              textShadow: '0 5px 15px rgba(0,0,0,0.2)'
-            }}>
-              Access formal aeronautical investigations, safety records, and technical findings of aircraft incidents across Nigeria. Submit any aviation hazard or aircraft accident directly for investigation.
-            </p>
-
-            {/* Actions Row */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', alignItems: 'center' }}>
-              {/* Integrated Hero Search */}
-              <div style={{ position: 'relative', width: '100%', maxWidth: '400px' }}>
-                <div style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: '1.5rem', color: 'rgba(255,255,255,0.6)' }}>
-                  <SearchIcon />
-                </div>
-                <input 
-                  type="text" 
-                  className="hero-search-input"
-                  placeholder="Search aviation reports..." 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '1.1rem 1.5rem 1.1rem 3.5rem',
-                    borderRadius: '20px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    outline: 'none',
-                    fontSize: '1.05rem',
-                    color: 'white',
-                    fontFamily: 'inherit',
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(30px)',
-                    WebkitBackdropFilter: 'blur(30px)',
-                    transition: 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = 'rgba(255,255,255,0.4)';
-                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-                    e.target.style.transform = 'translateY(-4px)';
-                    e.target.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.3), 0 0 0 4px rgba(255, 255, 255, 0.05)';
-                    const icon = e.target.previousElementSibling as HTMLElement;
-                    if (icon) icon.style.color = 'white';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.2)';
-                    const icon = e.target.previousElementSibling as HTMLElement;
-                    if (icon) icon.style.color = 'rgba(255,255,255,0.6)';
-                  }}
-                />
-              </div>
-
-              {/* Submit Report CTA */}
-              <AuthRedirectButton
-                className="submit-report-btn"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  padding: '1.1rem 2rem',
-                  backgroundColor: 'var(--nsib-red)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '20px',
-                  fontSize: '1.05rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  transition: 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                  boxShadow: '0 15px 30px rgba(226, 48, 48, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(226, 48, 48, 0.4), 0 0 0 4px rgba(226, 48, 48, 0.2)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 15px 30px rgba(226, 48, 48, 0.3)';
-                }}
-              >
-                <UploadIcon />
-                Submit New Report
-              </AuthRedirectButton>
-            </div>
-          </ScrollReveal>
-        </div>
+              Aircraft Accident<br/>Reports
+            </motion.h1>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.4 }}
+              style={{ fontSize: "1.2rem", color: "rgba(255,255,255,0.85)", maxWidth: "600px", lineHeight: 1.7, textShadow: "0 10px 20px rgba(0,0,0,0.2)" }}
+            >
+              Access formal aeronautical investigations, safety records, and technical findings of aircraft incidents across Nigeria.
+            </motion.p>
+          </div>
+        </motion.div>
       </section>
 
-      {/* Main Content Area */}
-      <div className="container" style={{ marginTop: '-4rem', position: 'relative', zIndex: 10 }}>
+      {/* ── Content ── */}
+      <div className="container" style={{ maxWidth: "1400px" }}>
+        <TabNav active="aircraft" />
 
-        {/* Antigravity Cards Grid */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))', 
-          gap: '3rem 2rem' 
-        }}>
-          {filteredReports.length > 0 ? (
-            filteredReports.map((item, index) => (
-              <ScrollReveal key={item.id} delay={0.1 * (index % 3)}>
-                <div 
-                  className="report-card"
-                  style={{ 
-                    position: 'relative',
-                    background: 'white',
-                    borderRadius: '24px',
-                    overflow: 'hidden',
-                    display: 'flex', 
-                    flexDirection: 'column',
-                    height: '100%',
-                    transformStyle: 'preserve-3d',
-                    transition: 'all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.05)',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-12px) scale(1.02)';
-                    e.currentTarget.style.boxShadow = '0 30px 60px rgba(27, 42, 107, 0.15)';
-                    const img = e.currentTarget.querySelector('.card-img') as HTMLElement;
-                    if (img) img.style.transform = 'scale(1.1)';
-                    const btn = e.currentTarget.querySelector('.dl-btn') as HTMLElement;
-                    if (btn) {
-                        btn.style.backgroundColor = 'var(--nsib-navy)';
-                        btn.style.color = 'white';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.05)';
-                    const img = e.currentTarget.querySelector('.card-img') as HTMLElement;
-                    if (img) img.style.transform = 'scale(1)';
-                    const btn = e.currentTarget.querySelector('.dl-btn') as HTMLElement;
-                    if (btn) {
-                        btn.style.backgroundColor = 'rgba(27, 42, 107, 0.05)';
-                        btn.style.color = 'var(--nsib-navy)';
-                    }
+        {/* Toolbar */}
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
+          {/* Search */}
+          <div style={{ position: "relative", flex: "1 1 260px", maxWidth: "380px" }}>
+            <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", left: "0.9rem", color: "#94A3B8", pointerEvents: "none" }}>
+              <SearchIcon />
+            </div>
+            <input
+              type="text" placeholder="Search by report no, operator, occurrence…"
+              value={search} onChange={e => handleSearch(e.target.value)}
+              style={{
+                width: "100%", padding: "0.7rem 1rem 0.7rem 2.6rem",
+                border: "1.5px solid #E2E8F0", borderRadius: "8px",
+                fontSize: "0.875rem", color: "#1E293B",
+                backgroundColor: "white", outline: "none",
+                transition: "border-color 0.2s",
+              }}
+              onFocus={e => e.target.style.borderColor = "#1B2A6B"}
+              onBlur={e => e.target.style.borderColor = "#E2E8F0"}
+            />
+          </div>
+
+          {/* Year filter */}
+          <select value={yearFilter} onChange={e => handleYear(e.target.value)}
+            style={{
+              padding: "0.7rem 1rem", border: "1.5px solid #E2E8F0",
+              borderRadius: "8px", fontSize: "0.875rem", color: "#1E293B",
+              backgroundColor: "white", cursor: "pointer", outline: "none",
+            }}
+          >
+            <option value="">All Years</option>
+            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+          </select>
+
+          {/* Count */}
+          <div style={{ marginLeft: "auto", fontSize: "0.85rem", color: "#64748B", whiteSpace: "nowrap" }}>
+            Showing <strong style={{ color: "#1B2A6B" }}>{paged.length}</strong> of <strong style={{ color: "#1B2A6B" }}>{filtered.length}</strong> records
+          </div>
+        </div>
+
+        {/* Table */}
+        <div style={{ backgroundColor: "white", borderRadius: "12px", border: "1px solid #E2E8F0", overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "1000px" }}>
+              <thead>
+                <tr style={{ backgroundColor: "#1B2A6B" }}>
+                  {/* S/No, Report No, Aircraft Operator, REG NO., Aircraft Type, Occurrence, Date Released, Status, Report Download */}
+                  <TH width="52px">S/N</TH>
+                  <TH width="140px">Report No.</TH>
+                  <TH>Aircraft Operator</TH>
+                  <TH width="120px">REG NO.</TH>
+                  <TH width="130px">Aircraft Type</TH>
+                  <TH>Occurrence</TH>
+                  <TH width="110px">Date Released</TH>
+                  <TH width="130px">Status</TH>
+                  <TH width="80px">Download</TH>
+                </tr>
+              </thead>
+              <tbody>
+                {paged.length > 0 ? paged.map((r, idx) => {
+                  const rowBg = idx % 2 === 0 ? "white" : "#F8FAFC";
+                  return (
+                    <tr key={r.sn}
+                      style={{ backgroundColor: rowBg, transition: "background 0.15s", cursor: "default" }}
+                      onMouseEnter={e => (e.currentTarget.style.backgroundColor = "#EEF2FF")}
+                      onMouseLeave={e => (e.currentTarget.style.backgroundColor = rowBg)}
+                    >
+                      <TD muted>{(page - 1) * ITEMS_PER_PAGE + idx + 1}</TD>
+                      <td style={{ padding: "0.9rem 1rem", verticalAlign: "middle", borderBottom: "1px solid #F1F5F9" }}>
+                        <span style={{ fontFamily: "monospace", fontSize: "0.8rem", fontWeight: 700, color: "#1B2A6B" }}>{r.reportNo}</span>
+                      </td>
+                      <TD>{r.operator}</TD>
+                      <TD muted>{r.regNo}</TD>
+                      <TD muted>-</TD>
+                      <TD>{r.occurrence}</TD>
+                      <TD muted>{formatDate(r.dateReleased)}</TD>
+                      <TD><StatusBadge status={r.status} /></TD>
+                      <td style={{ padding: "0.9rem 1rem", verticalAlign: "middle", borderBottom: "1px solid #F1F5F9" }}>
+                        <DownloadBtn />
+                      </td>
+                    </tr>
+                  );
+                }) : (
+                  <tr>
+                    <td colSpan={9} style={{ padding: "4rem 2rem", textAlign: "center", color: "#94A3B8" }}>
+                      <div style={{ fontSize: "0.95rem" }}>No records match your search criteria.</div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination footer */}
+          {totalPages > 1 && (
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "1rem 1.5rem", borderTop: "1px solid #F1F5F9",
+              backgroundColor: "white", flexWrap: "wrap", gap: "1rem",
+            }}>
+              <span style={{ fontSize: "0.85rem", color: "#64748B" }}>
+                Page {page} of {totalPages}
+              </span>
+              <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+                <button
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    width: "36px", height: "36px", borderRadius: "8px",
+                    border: "1.5px solid #E2E8F0", backgroundColor: "white",
+                    cursor: page === 1 ? "not-allowed" : "pointer",
+                    opacity: page === 1 ? 0.4 : 1, transition: "all 0.15s",
+                    color: "#1B2A6B",
                   }}
                 >
-                  {/* Image Header */}
-                  <div style={{ position: 'relative', height: '220px', overflow: 'hidden' }}>
-                    <div 
-                      className="card-img"
-                      style={{ 
-                        position: 'absolute',
-                        top: 0, left: 0, right: 0, bottom: 0,
-                        backgroundImage: `url(${item.image})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        transition: 'transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1)'
-                      }} 
-                    />
-                    {/* Gradient Overlay */}
-                    <div style={{ 
-                      position: 'absolute',
-                      top: 0, left: 0, right: 0, bottom: 0,
-                      background: 'linear-gradient(to bottom, rgba(27, 42, 107, 0.1) 0%, rgba(27, 42, 107, 0.8) 100%)'
-                    }} />
-                    
-                    {/* Status Badge */}
-                    <div style={{ 
-                      position: 'absolute', 
-                      top: '1.25rem', 
-                      left: '1.25rem',
-                      background: item.status === 'Final Report' ? 'var(--nsib-navy)' : item.status === 'Safety Advisory' ? 'var(--nsib-red)' : 'rgba(255,255,255,0.2)',
-                      backdropFilter: 'blur(8px)',
-                      color: 'white',
-                      padding: '0.4rem 1rem',
-                      borderRadius: '20px',
-                      fontSize: '0.75rem',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                      boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
-                    }}>
-                      {item.status}
-                    </div>
-
-                    {/* Date Badge */}
-                    <div style={{ 
-                      position: 'absolute', 
-                      bottom: '1.25rem', 
-                      left: '1.25rem',
-                      color: 'white',
-                      textShadow: '0 2px 4px rgba(0,0,0,0.5)'
-                    }}>
-                        <span style={{ fontSize: '1.5rem', fontWeight: 800 }}>{item.date}</span>
-                    </div>
-                  </div>
-
-                  {/* Card Content body */}
-                  <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flexGrow: 1, backgroundColor: 'white' }}>
-                    <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--nsib-navy)', lineHeight: 1.4, fontWeight: 700 }}>
-                      {item.title}
-                    </h3>
-                    
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '2rem', flexGrow: 1 }}>
-                      {item.description}
-                    </p>
-                    
-                    {/* Action Section */}
-                    <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'space-between',
-                        marginTop: 'auto', 
-                        borderTop: '1px solid rgba(0,0,0,0.05)', 
-                        paddingTop: '1.5rem' 
-                    }}>
-                        <span style={{ color: 'var(--nsib-slate)', fontSize: '0.85rem', fontWeight: 600 }}>
-                            Download Document
-                        </span>
-                        
-                        <button className="dl-btn" style={{ 
-                            display: 'flex', 
-                            alignItems: 'center',
-                            justifyContent: 'center', 
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            backgroundColor: 'rgba(27, 42, 107, 0.05)',
-                            color: 'var(--nsib-navy)', 
-                            transition: 'all 0.3s',
-                            border: 'none',
-                            cursor: 'pointer'
-                        }}>
-                            <DownloadIcon />
-                        </button>
-                    </div>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))
-          ) : (
-            <div style={{ 
-              gridColumn: '1 / -1', 
-              textAlign: 'center', 
-              padding: '6rem 2rem', 
-              backgroundColor: 'rgba(255,255,255,0.5)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: '24px',
-              border: '1px dashed var(--border-subtle)'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-                <SearchIcon />
+                  <ChevronIcon dir="left" />
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
+                  <button key={n} onClick={() => setPage(n)}
+                    style={{
+                      width: "36px", height: "36px", borderRadius: "8px",
+                      border: n === page ? "1.5px solid #1B2A6B" : "1.5px solid #E2E8F0",
+                      backgroundColor: n === page ? "#1B2A6B" : "white",
+                      color: n === page ? "white" : "#1B2A6B",
+                      fontSize: "0.85rem", fontWeight: n === page ? 700 : 500,
+                      cursor: "pointer", transition: "all 0.15s",
+                    }}
+                  >{n}</button>
+                ))}
+                <button
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    width: "36px", height: "36px", borderRadius: "8px",
+                    border: "1.5px solid #E2E8F0", backgroundColor: "white",
+                    cursor: page === totalPages ? "not-allowed" : "pointer",
+                    opacity: page === totalPages ? 0.4 : 1, transition: "all 0.15s",
+                    color: "#1B2A6B",
+                  }}
+                >
+                  <ChevronIcon dir="right" />
+                </button>
               </div>
-              <h3 style={{ marginBottom: '0.75rem', fontSize: '1.5rem' }}>No Reports found</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Try adjusting your search query.</p>
             </div>
           )}
         </div>
-      </div>
-      
-      {/* CSS Animations & Reset for scrollbar */}
-      <style dangerouslySetInnerHTML={{__html: `
-        ::-webkit-scrollbar { display: none; }
-        
-        .hero-search-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
 
-        @keyframes float {
-            0% { transform: translateY(0px) rotateZ(15deg); }
-            50% { transform: translateY(-20px) rotateZ(10deg); }
-            100% { transform: translateY(0px) rotateZ(15deg); }
-        }
-        @keyframes floatSlow {
-            0% { transform: translateY(0px) rotateZ(0deg) scale(1); }
-            50% { transform: translateY(-15px) rotateZ(5deg) scale(1.05); }
-            100% { transform: translateY(0px) rotateZ(0deg) scale(1); }
-        }
-        .floating-element {
-            animation: float 8s ease-in-out infinite;
-        }
-        .floating-element-slow {
-            animation: floatSlow 12s ease-in-out infinite;
-        }
-      `}} />
+        {/* Legend */}
+        <div style={{ display: "flex", gap: "1.5rem", marginTop: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
+          <span style={{ fontSize: "0.8rem", color: "#94A3B8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Status:</span>
+          {[["Final Report", "#1B2A6B"], ["Preliminary", "#D97706"], ["Safety Advisory", "#E23030"]].map(([label, bg]) => (
+            <div key={label} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+              <span style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: bg, display: "inline-block" }} />
+              <span style={{ fontSize: "0.8rem", color: "#64748B" }}>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </main>
   );
 }
