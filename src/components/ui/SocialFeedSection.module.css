@@ -198,112 +198,104 @@
   background: #ffffff;
 }
 
-/* ─── Facebook embed ─────────────────────────────────────────── */
-/* The Page Plugin hard-caps at 500px. We center it and fill the
-   remaining space with Facebook's own background color (#f0f2f5). */
-.fbWrapper {
-  background: #f0f2f5;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  overflow: hidden;
-}
-
-.fbInner {
-  width: 500px;
-  max-width: 100%;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.fbInner iframe {
-  display: block;
-  width: 500px;
-  max-width: 100%;
-}
-
-/* ─── X embed ────────────────────────────────────────────────── */
-.xWrapper {
-  width: 100%;
-  position: relative;
-  background: #ffffff;
-}
-
-/* The actual Twitter widget iframe injected by createTimeline */
-.xEmbed {
-  width: 100%;
-}
-
-.xEmbed iframe {
-  width: 100% !important;
-}
-
-/* ─── Loading skeleton ───────────────────────────────────────── */
-.skeleton {
-  padding: 1.25rem 1rem;
+/* ─── Facebook fallback card ─────────────────────────────────── */
+/* Facebook's Page Plugin breaks for visitors without third-party
+   cookies / who aren't logged in, so we ship a styled CTA instead. */
+.fbFallback {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  background: #ffffff;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
+  background: #f0f2f5;
+  text-align: center;
 }
 
-.skeletonLine {
-  height: 14px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
+.fbFallbackIcon {
+  opacity: 0.95;
 }
 
-.skeletonGap {
-  height: 1.5rem;
+.fbFallbackHandle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0d0d0d;
+  margin: 0;
+  line-height: 1.2;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-
-  100% {
-    background-position: -200% 0;
-  }
+.fbFallbackText {
+  font-size: 0.9rem;
+  color: #65676b;
+  margin: 0;
+  line-height: 1.6;
 }
 
-/* ─── X fallback (when embed fails / account restricted) ─────── */
+.fbFallbackLink {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.55rem 1.2rem;
+  background: #1877F2;
+  border-radius: 100px;
+  transition: background 0.16s ease, transform 0.16s ease;
+}
+
+.fbFallbackLink:hover {
+  background: #166fe5;
+  transform: translateY(-1px);
+}
+
+/* ─── X fallback card ────────────────────────────────────────── */
+/* X's widgets.js is unreliable & blocked by tracking protections,
+   so we ship a styled CTA instead of an embed. */
 .xFallback {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
   background: #f7f8f9;
-  color: #0d0d0d;
+  text-align: center;
 }
 
 .xFallbackIcon {
-  opacity: 0.15;
+  opacity: 0.95;
+}
+
+.xFallbackHandle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0d0d0d;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .xFallbackText {
   font-size: 0.9rem;
   color: #65676b;
   margin: 0;
+  line-height: 1.6;
 }
 
 .xFallbackLink {
+  margin-top: 0.25rem;
   font-size: 0.8rem;
   font-weight: 700;
-  color: #0f0f0f;
+  color: #ffffff;
   text-decoration: none;
-  padding: 0.45rem 1.1rem;
-  border: 1.5px solid #0f0f0f;
+  padding: 0.55rem 1.2rem;
+  background: #0f0f0f;
   border-radius: 100px;
-  transition: background 0.16s ease, color 0.16s ease;
+  transition: background 0.16s ease, transform 0.16s ease;
 }
 
 .xFallbackLink:hover {
-  background: #0f0f0f;
-  color: #ffffff;
+  background: #2a2a2a;
+  transform: translateY(-1px);
 }
 
 /* ─── Also on row ────────────────────────────────────────────── */

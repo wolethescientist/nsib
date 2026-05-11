@@ -267,31 +267,134 @@ export default function Home() {
               sizes="100vw"
             />
           ))}
+          <div className={styles.heroGrid} aria-hidden="true" />
+          <div className={styles.heroVignette} aria-hidden="true" />
+          <div className={styles.heroScan} aria-hidden="true" />
           <div className={styles.gradientOverlay} />
         </div>
+
         <div className="container">
-          <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>
-              Advancing Safety in Nigeria&apos;s <br />
-              <span>Transportation Sector</span>
-            </h1>
-            <p className={styles.heroSubtitle}>
-              We conduct independent investigations into aviation, railway, and maritime accidents to prevent reoccurrences and save lives across the nation.
-            </p>
-            <div className={styles.heroActions}>
-              <Link href="/operations-centre" className="btn btn-primary" style={{ padding: "1rem 2rem", fontSize: "1.1rem" }}>
-                Enter Operations Centre
-              </Link>
-              <Link href="/publications" className="btn" style={{ padding: "1rem 2rem", fontSize: "1.1rem", backgroundColor: "#ffffff", color: "var(--nsib-navy)" }}>
-                Our Latest Findings
-              </Link>
+          <div className={styles.heroLayout}>
+            <div className={styles.heroLeft}>
+              <div className={styles.heroBadge}>
+                <span className={styles.pulseIndicator}></span>
+                <span className={styles.badgeText}>Official · 09°04&prime;N 7°29&prime;E</span>
+                <span className={styles.badgeDivider} />
+                <span className={styles.badgeMuted}>Abuja, NG</span>
+              </div>
+
+              <h1 className={styles.heroTitle}>
+                <span className={styles.titleLine}>Advancing safety</span>
+                <span className={styles.titleLine}>across Nigeria&rsquo;s</span>
+                <span className={styles.titleAccent}>
+                  <em>transportation</em> sector.
+                </span>
+              </h1>
+
+              <p className={styles.heroSubtitle}>
+                Independent investigations into aviation, maritime &amp; railway occurrences — uncovering what happened, preventing what comes next.
+              </p>
+
+              <div className={styles.heroActions}>
+                <Link href="/operations-centre" className={styles.heroBtnPrimary}>
+                  <span>Enter Operations Centre</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                </Link>
+                <Link href="/publications" className={styles.heroBtnSecondary}>
+                  Our Latest Findings
+                </Link>
+              </div>
+            </div>
+
+            <aside className={styles.heroRight} aria-label="Sector status">
+              <div className={styles.statusCard}>
+                <div className={styles.statusHeader}>
+                  <span className={styles.statusLabel}>
+                    <span className={styles.statusLed} />
+                    Live Sector Watch
+                  </span>
+                  <span className={styles.statusMeta}>NSIB · Ops</span>
+                </div>
+
+                <ul className={styles.statusList}>
+                  <li className={styles.statusRow}>
+                    <span className={styles.statusIconBox}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.6L3 8l5 5-3.2 3.2-2.4-.8L2 16l3 3c.6.6 1.4.9 2.2.9h.1c.8-.1 1.5-.4 2.1-.9l.6-.6 3.2-3.2 5 5 1.2-.7c.4-.2.7-.6.6-1.1z" /></svg>
+                    </span>
+                    <div className={styles.statusBody}>
+                      <strong>Aviation</strong>
+                      <span>Civil airspace · active monitoring</span>
+                    </div>
+                    <span className={`${styles.statusDot} ${styles.statusDotGreen}`} aria-label="active" />
+                  </li>
+                  <li className={styles.statusRow}>
+                    <span className={styles.statusIconBox}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 21h20" /><path d="M12 9V5a2 2 0 0 1 2-2h2" /><path d="M20 21v-4a2 2 0 0 0-2-2h-3.5L12 9l-2.5 6H6a2 2 0 0 0-2 2v4" /></svg>
+                    </span>
+                    <div className={styles.statusBody}>
+                      <strong>Maritime</strong>
+                      <span>Territorial waters · investigations open</span>
+                    </div>
+                    <span className={`${styles.statusDot} ${styles.statusDotAmber}`} aria-label="ongoing" />
+                  </li>
+                  <li className={styles.statusRow}>
+                    <span className={styles.statusIconBox}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="16" rx="2" /><path d="M4 11h16" /><path d="M12 3v8" /><path d="m8 19-2 3" /><path d="m18 22-2-3" /><path d="M8 15h.01" /><path d="M16 15h.01" /></svg>
+                    </span>
+                    <div className={styles.statusBody}>
+                      <strong>Railway</strong>
+                      <span>National rail network · safety review</span>
+                    </div>
+                    <span className={`${styles.statusDot} ${styles.statusDotGreen}`} aria-label="active" />
+                  </li>
+                </ul>
+
+                <div className={styles.statusFooter}>
+                  <div className={styles.statusMetric}>
+                    <strong>3</strong>
+                    <span>Sectors</span>
+                  </div>
+                  <div className={styles.statusMetric}>
+                    <strong>100+</strong>
+                    <span>Investigations</span>
+                  </div>
+                  <div className={styles.statusMetric}>
+                    <strong>15+</strong>
+                    <span>Years</span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+
+          <div className={styles.heroTicker} aria-hidden="true">
+            <div className={styles.heroTickerTrack}>
+              {[...Array(2)].flatMap((_, k) => [
+                "Independent",
+                "Objective",
+                "Fact-finding · not fault-finding",
+                "Aviation",
+                "Maritime",
+                "Railway",
+                "Federal Republic of Nigeria",
+              ].map((w, i) => (
+                <span className={styles.heroTickerItem} key={`${k}-${i}`}>
+                  <span className={styles.heroTickerDot} />
+                  {w}
+                </span>
+              )))}
             </div>
           </div>
         </div>
+
+        <a href="#quick-access" className={styles.heroScrollHint} aria-label="Scroll to next section">
+          <span>Scroll</span>
+          <span className={styles.heroScrollLine} />
+        </a>
       </section>
 
       {/* ── 2. QUICK ACCESS ── */}
-      <section className={styles.quickAccessSection}>
+      <section id="quick-access" className={styles.quickAccessSection}>
         <div className="container">
           <ScrollReveal direction="up" delay={0.1} distance={30}>
             <div className={styles.quickAccess}>
@@ -499,25 +602,41 @@ export default function Home() {
       <section className={styles.sectorsSection}>
         <div className="container">
           <div className={styles.sectionHeaderCentered}>
-            <span className={styles.sectionLabel}>Our Focus Areas</span>
-            <h2>Multimodal Safety Investigations</h2>
+            <span className={styles.sectionLabel}>
+              <span className={styles.sectionLabelRule} aria-hidden="true" />
+              Our Focus Areas
+              <span className={styles.sectionLabelRule} aria-hidden="true" />
+            </span>
+            <h2>Multimodal Safety <em>Investigations</em></h2>
+            <p className={styles.sectionLead}>Three modes of transport. One mandate — independent, evidence-led inquiry that prevents the next incident.</p>
           </div>
           <div className={styles.sectorsGrid}>
             {[
-              { id: "aviation", num: "01", title: "Aviation Safety", desc: "Investigating civil aviation occurrences within Nigerian airspace or involving Nigerian registered aircraft globally.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.6L3 8l5 5-3.2 3.2-2.4-.8L2 16l3 3c.6.6 1.4.9 2.2.9h.1c.8-.1 1.5-.4 2.1-.9l.6-.6 3.2-3.2 5 5 1.2-.7c.4-.2.7-.6.6-1.1z" /></svg>, image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop" },
-              { id: "maritime", num: "02", title: "Maritime Safety", desc: "Conducting impartial investigations into marine casualties and incidents on Nigerian territorial waters.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 21h20" /><path d="M12 9V5a2 2 0 0 1 2-2h2" /><path d="M20 21v-4a2 2 0 0 0-2-2h-3.5L12 9l-2.5 6H6a2 2 0 0 0-2 2v4" /></svg>, image: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=2070&auto=format&fit=crop" },
-              { id: "rail", num: "03", title: "Railway Safety", desc: "Analyzing railway accidents and serious incidents to improve the safety of the national rail network.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="16" rx="2" /><path d="M4 11h16" /><path d="M12 3v8" /><path d="m8 19-2 3" /><path d="m18 22-2-3" /><path d="M8 15h.01" /><path d="M16 15h.01" /></svg>, image: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=2084&auto=format&fit=crop" },
+              { id: "aviation", num: "01", tag: "Air", standard: "ICAO Annex 13", title: "Aviation Safety", desc: "Investigating civil aviation occurrences within Nigerian airspace or involving Nigerian registered aircraft globally.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.6L3 8l5 5-3.2 3.2-2.4-.8L2 16l3 3c.6.6 1.4.9 2.2.9h.1c.8-.1 1.5-.4 2.1-.9l.6-.6 3.2-3.2 5 5 1.2-.7c.4-.2.7-.6.6-1.1z" /></svg>, image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop" },
+              { id: "maritime", num: "02", tag: "Sea", standard: "IMO Casualty Code", title: "Maritime Safety", desc: "Conducting impartial investigations into marine casualties and incidents on Nigerian territorial waters.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 21h20" /><path d="M12 9V5a2 2 0 0 1 2-2h2" /><path d="M20 21v-4a2 2 0 0 0-2-2h-3.5L12 9l-2.5 6H6a2 2 0 0 0-2 2v4" /></svg>, image: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=2070&auto=format&fit=crop" },
+              { id: "rail", num: "03", tag: "Rail", standard: "Rail Safety Standards", title: "Railway Safety", desc: "Analyzing railway accidents and serious incidents to improve the safety of the national rail network.", icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="16" rx="2" /><path d="M4 11h16" /><path d="M12 3v8" /><path d="m8 19-2 3" /><path d="m18 22-2-3" /><path d="M8 15h.01" /><path d="M16 15h.01" /></svg>, image: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=2084&auto=format&fit=crop" },
             ].map((sector, index) => (
               <ScrollReveal direction="up" delay={0.1 + index * 0.15} distance={40} key={sector.id} className={styles.sectorCard}>
+                <span className={styles.sectorTopBar} aria-hidden="true" />
                 <div className={styles.sectorImageContainer}>
                   <Image src={sector.image} alt={sector.title} fill className={styles.sectorImg} sizes="(max-width: 768px) 100vw, 33vw" unoptimized />
+                  <span className={styles.sectorImageOverlay} aria-hidden="true" />
+                  <span className={styles.sectorTag}>
+                    <span className={styles.sectorTagIcon} aria-hidden="true">{sector.icon}</span>
+                    {sector.tag}
+                  </span>
+                  <span className={styles.sectorNum} aria-hidden="true">{sector.num}</span>
                 </div>
                 <div className={styles.sectorCardBody}>
-                  <div className={styles.sectorIconBadge}>{sector.icon}</div>
+                  <div className={styles.sectorMeta}>
+                    <span className={styles.sectorMetaLabel}>Mandate</span>
+                    <span className={styles.sectorMetaValue}>{sector.standard}</span>
+                  </div>
                   <h3>{sector.title}</h3>
                   <p>{sector.desc}</p>
                   <Link href={`/${sector.id}-reports`} className={styles.sectorLink}>
-                    View Reports <span className={styles.arrow}>→</span>
+                    <span>View Reports</span>
+                    <span className={styles.arrow}>→</span>
                   </Link>
                 </div>
               </ScrollReveal>
@@ -565,6 +684,36 @@ export default function Home() {
 
       {/* ── 9. MANAGEMENT TEAM SLIDESHOW ── */}
       <ManagementSlideshow />
+
+      {/* ── 9.5. LEARNING PORTAL ── */}
+      <section className={styles.learningSection}>
+        <div className="container">
+          <div className={styles.learningGrid}>
+            <ScrollReveal direction="left" delay={0.1} distance={40} className={styles.learningContent}>
+              <span className={styles.sectionLabel}>Education &amp; Training</span>
+              <h2>NSIB Learning Portal</h2>
+              <p>
+                Enhance your knowledge of transportation safety with our newly launched learning platform. Access specialised courses, certification programs, and safety resources curated by industry experts to promote a culture of safety across aviation, maritime, and railway sectors.
+              </p>
+              <div style={{ marginTop: "1.5rem" }}>
+                <Link href="/learning-portal" className="btn btn-primary" style={{ padding: "1rem 2rem", fontSize: "1.05rem" }}>
+                  Access Learning Portal
+                </Link>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal direction="right" delay={0.3} distance={40} className={styles.learningImageWrapper}>
+              <Image 
+                src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop" 
+                alt="Students learning about safety" 
+                fill 
+                className={styles.learningImage} 
+                sizes="(max-width: 768px) 100vw, 50vw" 
+                unoptimized 
+              />
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
 
       {/* ── 10. NEWS + DOWNLOAD RESOURCES ── */}
       <section className={styles.newsResourcesSection}>

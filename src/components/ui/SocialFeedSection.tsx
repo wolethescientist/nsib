@@ -1,6 +1,5 @@
 'use client';
 
-import Script from 'next/script';
 import Link from 'next/link';
 import styles from './SocialFeedSection.module.css';
 
@@ -9,48 +8,60 @@ interface Props {
   compact?: boolean;
 }
 
-// Facebook Page Plugin always renders an internal page header (~85px).
-// There is no parameter to remove it. We clip it by pushing the iframe
-// up with a negative top margin and hiding overflow on the wrapper.
-const FB_HEADER_HEIGHT = 85;
-
 function FacebookEmbed({ height }: { height: number }) {
-  const iframeHeight = height + FB_HEADER_HEIGHT;
-
   return (
-    <div className={styles.fbWrapper}>
-      {/* Clip wrapper: exact visible height, hides the internal FB header */}
-      <div className={styles.fbInner} style={{ height }}>
-        <iframe
-          src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fnsibofficial&tabs=timeline&width=500&height=${iframeHeight}&small_header=true&adapt_container_width=false&hide_cover=true&show_facepile=false`}
-          width="500"
-          height={iframeHeight}
-          style={{
-            border: 'none',
-            overflow: 'hidden',
-            display: 'block',
-            marginTop: `-${FB_HEADER_HEIGHT}px`,
-          }}
-          sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-          title="NSIB Facebook Page"
-        />
-      </div>
+    <div className={styles.fbFallback} style={{ minHeight: height }}>
+      <svg
+        className={styles.fbFallbackIcon}
+        width="64"
+        height="64"
+        viewBox="0 0 24 24"
+        fill="#1877F2"
+        aria-hidden="true"
+      >
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+      </svg>
+      <p className={styles.fbFallbackHandle}>@nsibofficial</p>
+      <p className={styles.fbFallbackText}>
+        See our latest updates, announcements, and<br />investigation reports on Facebook.
+      </p>
+      <a
+        href="https://facebook.com/nsibofficial"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.fbFallbackLink}
+      >
+        Visit our Facebook page ↗
+      </a>
     </div>
   );
 }
 
 function XTimelineEmbed({ height }: { height: number }) {
   return (
-    <div className={styles.xWrapper} style={{ minHeight: height }}>
-      <a
-        className="twitter-timeline"
-        href="https://twitter.com/nsibofficial?ref_src=twsrc%5Etfw"
-        data-height={height}
+    <div className={styles.xFallback} style={{ minHeight: height }}>
+      <svg
+        className={styles.xFallbackIcon}
+        width="56"
+        height="56"
+        viewBox="0 0 1200 1227"
+        fill="#0f0f0f"
+        aria-hidden="true"
       >
-        Tweets by nsibofficial
+        <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z" />
+      </svg>
+      <p className={styles.xFallbackHandle}>@nsibofficial</p>
+      <p className={styles.xFallbackText}>
+        Real-time updates and breaking news from<br />the Nigerian Safety Investigation Bureau.
+      </p>
+      <a
+        href="https://x.com/nsibofficial"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.xFallbackLink}
+      >
+        Follow on X ↗
       </a>
-      <Script src="https://platform.twitter.com/widgets.js" strategy="lazyOnload" />
     </div>
   );
 }

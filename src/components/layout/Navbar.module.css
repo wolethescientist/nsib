@@ -273,8 +273,12 @@
     display: none; /* simple hide, ideally would toggle, but to just let it wrap or show always */
   }
 
-  .navItem:hover .dropdown, .navItem:focus-within .dropdown {
+  .navItem:hover .dropdown,
+  .navItem:focus-within .dropdown {
     display: flex;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
   }
 
   .dropdownLink {

@@ -117,6 +117,10 @@ export default function Navbar() {
           </div>
 
           <div className={styles.navItem}>
+            <Link href="/learning-portal">Learning Portal</Link>
+          </div>
+
+          <div className={styles.navItem}>
             <Link href="/contact-us">Contact <span className={styles.chevron}>▼</span></Link>
             <div className={styles.dropdown}>
               <Link href="/comment-on-regulations" className={styles.dropdownLink}>Comments On Regulations</Link>
