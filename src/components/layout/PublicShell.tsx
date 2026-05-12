@@ -10,13 +10,13 @@ export default function PublicShell({ children }: { children: React.ReactNode })
   const isPortal = pathname?.startsWith("/dashboard") || pathname?.startsWith("/login");
 
   return (
-    <>
+    <div style={{ overflowX: "hidden", width: "100%" }}>
       {!isPortal && <Navbar />}
       <div style={isPortal ? undefined : { paddingTop: "var(--nav-height)" }}>
         {children}
       </div>
       {!isPortal && <Footer />}
       {!isPortal && <ChatWidget />}
-    </>
+    </div>
   );
 }

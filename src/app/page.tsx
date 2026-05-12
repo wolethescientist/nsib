@@ -139,8 +139,12 @@ function ManagementSlideshow() {
       <div className="container">
         <ScrollReveal direction="up" delay={0.1}>
           <div className={styles.sectionHeaderCentered}>
-            <span className={styles.sectionLabel}>Leadership</span>
-            <h2>Our Management Team</h2>
+            <span className={styles.sectionLabel}>
+              <span className={styles.sectionLabelRule} aria-hidden="true" />
+              Leadership
+              <span className={styles.sectionLabelRule} aria-hidden="true" />
+            </span>
+            <h2>Our Management <em>Team</em></h2>
             <p className={styles.sectionSubtitle}>
               Meet the management team of NSIB, appointed under the visionary leadership of <strong>President Bola Ahmed Tinubu</strong> through the Minister of Aviation, <strong>Festus Keyamo SAN</strong>, dedicated to advancing safety in aviation, maritime, and road transport.
             </p>
@@ -448,9 +452,13 @@ export default function Home() {
       <section className={styles.bureauSection}>
         <div className="container">
           <ScrollReveal direction="up" delay={0.1}>
-            <div className={styles.bureauHeader}>
-              <span className={styles.sectionLabel}>Who We Serve</span>
-              <h2>Nigerian Safety Investigation Bureau Units</h2>
+            <div className={styles.sectionHeaderCentered}>
+              <span className={styles.sectionLabel}>
+                <span className={styles.sectionLabelRule} aria-hidden="true" />
+                About NSIB
+                <span className={styles.sectionLabelRule} aria-hidden="true" />
+              </span>
+              <h2>Nigerian Safety Investigation Bureau <em>Units</em></h2>
             </div>
           </ScrollReveal>
 
@@ -458,7 +466,7 @@ export default function Home() {
             {[
               { title: "The Bureau", href: "/about", image: "/images/nsib_building.jpg", desc: "Learn about our mandate, history and independence as Nigeria's foremost safety investigation authority." },
               { title: "Organisation", href: "/directorates", image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop", desc: "Explore the organizational structure, directorates and departments of the NSIB." },
-              { title: "Management Team", href: "/team", image: "/images/team/dg_nsib.jpg", desc: "Meet the leadership driving Nigeria's transport safety agenda with purpose and expertise." },
+              { title: "Management Team", href: "/team", image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop", desc: "Meet the leadership driving Nigeria's transport safety agenda with purpose and expertise." },
             ].map((unit, i) => (
               <ScrollReveal direction="up" delay={0.1 + i * 0.15} distance={30} key={unit.title}>
                 <Link href={unit.href} className={styles.bureauCard}>
@@ -483,7 +491,7 @@ export default function Home() {
         <div className={`container ${styles.mandateGrid}`}>
           <ScrollReveal direction="left" delay={0.1} className={styles.mandateText}>
             <span className={styles.sectionLabel}>Who We Are</span>
-            <h2>Fact-Finding, <br />Not Fault-Finding</h2>
+            <h2>Fact-Finding, <br />Not <em>Fault-Finding</em></h2>
             <p>
               The Nigerian Safety Investigation Bureau (NSIB) is an independent agency of the Federal Government of Nigeria, legally mandated to investigate transportation accidents and serious incidents.
             </p>
@@ -577,7 +585,7 @@ export default function Home() {
 
           <ScrollReveal direction="right" delay={0.4} className={styles.dgContent}>
             <span className={styles.sectionLabel}>Leadership</span>
-            <h2>From The Office Of The Director General</h2>
+            <h2>From The Office Of The <em>Director General</em></h2>
             <p className={styles.dgBodyText}>
               We will harness the power of data, technology, and human ingenuity to build a future where every journey is undertaken with peace of mind, every mile traversed with the assurance of a safe return.
             </p>
@@ -648,9 +656,13 @@ export default function Home() {
       {/* ── 8. RECENT INVESTIGATIONS ── */}
       <section className={styles.investigationsSection}>
         <div className="container">
-          <div className={styles.sectionHeader}>
-            <span className={styles.sectionLabel}>Transparency &amp; Reporting</span>
-            <h2>Recent Investigations</h2>
+          <div className={styles.sectionHeaderCentered}>
+            <span className={styles.sectionLabel}>
+              <span className={styles.sectionLabelRule} aria-hidden="true" />
+              Transparency &amp; Reporting
+              <span className={styles.sectionLabelRule} aria-hidden="true" />
+            </span>
+            <h2>Recent <em>Investigations</em></h2>
           </div>
           <div className={styles.cardsGrid}>
             {displayReports.slice(0, 3).map((item, index) => (
@@ -691,7 +703,7 @@ export default function Home() {
           <div className={styles.learningGrid}>
             <ScrollReveal direction="left" delay={0.1} distance={40} className={styles.learningContent}>
               <span className={styles.sectionLabel}>Education &amp; Training</span>
-              <h2>NSIB Learning Portal</h2>
+              <h2>NSIB Learning <em>Portal</em></h2>
               <p>
                 Enhance your knowledge of transportation safety with our newly launched learning platform. Access specialised courses, certification programs, and safety resources curated by industry experts to promote a culture of safety across aviation, maritime, and railway sectors.
               </p>
@@ -725,7 +737,7 @@ export default function Home() {
                 <div className={styles.newsPanelHeader}>
                   <div>
                     <span className={styles.sectionLabel}>Latest Updates</span>
-                    <h2>News &amp; Publications</h2>
+                    <h2>News &amp; <em>Publications</em></h2>
                   </div>
                   <Link href="/news" className={styles.viewAllLink}>View All →</Link>
                 </div>
@@ -785,7 +797,7 @@ export default function Home() {
             <ScrollReveal direction="right" delay={0.2} className={styles.resourcesPanel}>
               <div className={styles.resourcesHeader}>
                 <span className={styles.sectionLabel}>Resources</span>
-                <h2>Download Centre</h2>
+                <h2>Download <em>Centre</em></h2>
                 <p>Access official NSIB documents, reports, and guidelines</p>
               </div>
               <div className={styles.resourcesList}>
